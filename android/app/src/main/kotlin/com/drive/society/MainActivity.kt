@@ -1,4 +1,4 @@
-package com.matthewfry.dirve_society
+package com.drive.society
 
 import io.flutter.embedding.android.FlutterActivity
 

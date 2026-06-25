@@ -69,7 +69,7 @@ class _FeedScreenState extends State<FeedScreen> {
         int currentLikes =
             allClubFeedController.postList[index].contentMeta?.like ?? 0;
         print('Current likes: $currentLikes');
-        
+
         allClubFeedController.updatePostLike(postId, true, currentLikes + 1);
         if (mounted) {
           // showSnackBarMessage(context, 'Like successfully completed');

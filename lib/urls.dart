@@ -1,7 +1,7 @@
 class Urls {
   // static const String _baseUrl = 'http://10.10.10.16:5006/api/v1';
-  static const String _baseUrl = 'http://72.244.153.29:5006/api/v1';
-  static const String socketUrl = 'http://72.244.153.29:4006';
+  static const String _baseUrl = 'https://api.drivesociety.net/api/v1';
+  static const String socketUrl = 'https://socket.drivesociety.net';
   // static const String socketUrl = 'http://192.168.10.144:4001/';
   static const String signUpUrl = '$_baseUrl/profiles/register';
   static const String otpVerifyUrl = '$_baseUrl/otp/verify-otp';
@@ -37,7 +37,7 @@ class Urls {
   static const String discoverClubUrl = '$_baseUrl/clubs/discover';
   static const String addConnectionRequestUrl = '$_baseUrl/connect-requests';
   static const String allMeetUrl = '$_baseUrl/meets';
-  static const String createForumUrl = '$_baseUrl/forums'; 
+  static const String createForumUrl = '$_baseUrl/forums';
   static const String myjoiningClub =
       '$_baseUrl/connect-requests/club-connection';
   static const String addInvitePeopleUrl =
