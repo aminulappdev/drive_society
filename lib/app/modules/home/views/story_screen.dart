@@ -96,211 +96,209 @@ class _StoryScreenState extends State<StoryScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: GetBuilder<GetStoryController>(builder: (ctrl) {
-          if (ctrl.inProgress) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            );
-          }
-
-          final user = ctrl.specificStoryModel?.data?.user;
-          final stories = user?.stories;
-
-          if (user == null || stories == null || stories.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.photo, size: 80, color: Colors.white54),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No stories yet',
-                    style: TextStyle(color: Colors.white70, fontSize: 18),
-                  ),
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child:
-                        Text('Go Back', style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return Stack(
-            children: [
-              // Full PageView
-              PageView.builder(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() => _currentPage = index);
-                  _startTimer();
-                },
-                itemCount: stories.length,
-                itemBuilder: (context, index) {
-                  final story = stories[index];
-
-                  return GestureDetector(
-                    onTapDown: (details) {
-                      final width = MediaQuery.of(context).size.width;
-                      if (details.globalPosition.dx < width / 2) {
-                        _onTapLeft();
-                      } else {
-                        _onTapRight();
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          // Background Image
-                          Image.network(
-                            story.content ?? '',
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 3,
-                                ),
-                              );
-                            },
-                            errorBuilder: (_, __, ___) {
-                              return const Center(
-                                child: Icon(Icons.broken_image,
-                                    color: Colors.white70, size: 70),
-                              );
-                            },
-                          ),
-
-                          // Top Bar
-                          Positioned(
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [Colors.black54, Colors.transparent],
-                                ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: GetBuilder<GetStoryController>(builder: (ctrl) {
+        if (ctrl.inProgress) {
+          return const Center(
+            child: CircularProgressIndicator(color: Colors.white),
+          );
+        }
+    
+        final user = ctrl.specificStoryModel?.data?.user;
+        final stories = user?.stories;
+    
+        if (user == null || stories == null || stories.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.photo, size: 80, color: Colors.white54),
+                const SizedBox(height: 16),
+                Text(
+                  'No stories yet',
+                  style: TextStyle(color: Colors.white70, fontSize: 18),
+                ),
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child:
+                      Text('Go Back', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          );
+        }
+    
+        return Stack(
+          children: [
+            // Full PageView
+            PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() => _currentPage = index);
+                _startTimer();
+              },
+              itemCount: stories.length,
+              itemBuilder: (context, index) {
+                final story = stories[index];
+    
+                return GestureDetector(
+                  onTapDown: (details) {
+                    final width = MediaQuery.of(context).size.width;
+                    if (details.globalPosition.dx < width / 2) {
+                      _onTapLeft();
+                    } else {
+                      _onTapRight();
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.black,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // Background Image
+                        Image.network(
+                          story.content ?? '',
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
                               ),
+                            );
+                          },
+                          errorBuilder: (_, __, ___) {
+                            return const Center(
+                              child: Icon(Icons.broken_image,
+                                  color: Colors.white70, size: 70),
+                            );
+                          },
+                        ),
+    
+                        // Top Bar
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.black54, Colors.transparent],
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                // Progress Bars
+                                Expanded(
+                                  child: Row(
+                                    children:
+                                        List.generate(stories.length, (i) {
+                                      return Expanded(
+                                        child: Container(
+                                          height: 3,
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: LinearProgressIndicator(
+                                            value: i < _currentPage
+                                                ? 1.0
+                                                : (i == _currentPage
+                                                    ? 0.99
+                                                    : 0.0),
+                                            backgroundColor: Colors.white24,
+                                            valueColor:
+                                                const AlwaysStoppedAnimation(
+                                                    Colors.white),
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+    
+                        // User Info
+                        Positioned(
+                          top: 20,
+                          left: 16,
+                          right: 50,
+                          child: Container(
+                            color: Colors.grey.withValues(alpha: 0.30),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
                               child: Row(
                                 children: [
-                                  // Progress Bars
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: NetworkImage(controller
+                                            .specificStoryModel!
+                                            .data!
+                                            .user
+                                            ?.photoUrl ??
+                                        ''),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 12),
                                   Expanded(
-                                    child: Row(
-                                      children:
-                                          List.generate(stories.length, (i) {
-                                        return Expanded(
-                                          child: Container(
-                                            height: 3,
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            child: LinearProgressIndicator(
-                                              value: i < _currentPage
-                                                  ? 1.0
-                                                  : (i == _currentPage
-                                                      ? 0.99
-                                                      : 0.0),
-                                              backgroundColor: Colors.white24,
-                                              valueColor:
-                                                  const AlwaysStoppedAnimation(
-                                                      Colors.white),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              user.name ?? 'User',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
                                             ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
+                                            Text(
+                                              timeAgo(story.createdAt),
+                                              style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          story.text!.trim(),
+                                          style: const TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 12,
                                           ),
-                                        );
-                                      }),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-
-                          // User Info
-                          Positioned(
-                            top: 20,
-                            left: 16,
-                            right: 50,
-                            child: Container(
-                              color: Colors.grey.withValues(alpha: 0.30),
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundImage: NetworkImage(controller
-                                              .specificStoryModel!
-                                              .data!
-                                              .user
-                                              ?.photoUrl ??
-                                          ''),
-                                      backgroundColor: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                user.name ?? 'User',
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              Text(
-                                                timeAgo(story.createdAt),
-                                                style: const TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            story.text!.trim(),
-                                            style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
-            ],
-          );
-        }),
-      ),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      }),
     );
   }
 

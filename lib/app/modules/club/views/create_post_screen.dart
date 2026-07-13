@@ -1,20 +1,16 @@
 import 'dart:io';
 
 import 'package:dirve_society/app/modules/club/controllers/all_club_field_controller.dart';
-import 'package:dirve_society/app/modules/club/controllers/create_club_controller.dart';
 import 'package:dirve_society/app/modules/club/controllers/create_post_controller.dart';
-import 'package:dirve_society/app/modules/club/views/club_view.dart';
-import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
+import 'package:dirve_society/app/modules/home/controllers/feed/all_feed_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_feed_controller.dart';
-import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
-import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
-import '../../../../common/helper/upload_widget.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_circular_container.dart';
@@ -35,18 +31,14 @@ class _CreatePostViewState extends State<CreatePostView> {
   final TextEditingController descriptionController = TextEditingController();
   final MyFeedController myFeedController = Get.put(MyFeedController());
   String privacy = 'public'; // Changed from final to non-final
-  final CreateClubController createClubController =
-      Get.put(CreateClubController());
-  final MyClubController myClubController = Get.put(MyClubController());
   final CreatePostController createPostController =
       Get.put(CreatePostController());
   final AllClubFeedController allClubFeedController =
       Get.put(AllClubFeedController());
 
   final formKey = GlobalKey<FormState>();
-  File? profileImage;
-  File? coverImage;
-  final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
+  final List<File> selectedImages = [];
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -102,24 +94,9 @@ class _CreatePostViewState extends State<CreatePostView> {
                   hintText: 'Describe about your club',
                 ),
                 sh16,
-                Text(
-                  'Profile Photo',
-                  style: h5,
-                ),
+                Text('Photos', style: h5),
                 sh8,
-                UploadWidget(
-                  onTap: () {
-                    _imagePickerHelper.showAlertDialog(context,
-                        (File pickedImage) {
-                      setState(() {
-                        profileImage = pickedImage;
-                      });
-                    });
-                  },
-                  imagePath: AppImages.upload,
-                  imageFile: profileImage,
-                  label: 'Upload',
-                ),
+                _buildImagePicker(),
                 sh100,
               ],
             ),
@@ -154,22 +131,42 @@ class _CreatePostViewState extends State<CreatePostView> {
         nameController.text,
         privacy,
         descriptionController.text,
-        profileImage,
+        selectedImages,
         clubId: widget.clubId,
       );
 
       if (isSuccess) {
         if (mounted) {
           if (widget.clubId != null) {
-            await allClubFeedController.getAllClubFeed(widget.clubId!);
-            await Get.to(() => ClubView(
-                  isAuthor: true,
-                  id: widget.clubId ?? '',
-                  authorId: widget.authorId ?? '',
-                ));
+            final refreshRequests = <Future<bool>>[
+              allClubFeedController.refreshClubFeed(widget.clubId!),
+            ];
+
+            if (Get.isRegistered<AllFeedController>()) {
+              refreshRequests.add(
+                Get.find<AllFeedController>().refreshFeed(),
+              );
+            }
+
+            await Future.wait(refreshRequests);
           } else {
-            await myClubController.getMyClub();
-            await Get.to(() => MyPostView());
+            final refreshRequests = <Future<bool>>[
+              myFeedController.getMyFeed(),
+            ];
+
+            if (Get.isRegistered<AllFeedController>()) {
+              refreshRequests.add(
+                Get.find<AllFeedController>().refreshFeed(),
+              );
+            }
+
+            await Future.wait(refreshRequests);
+          }
+
+          if (mounted) {
+            _clearFormData();
+            showSnackBarMessage(context, 'Post uploaded successfully');
+            Navigator.of(context).pop(true);
           }
         }
       } else {
@@ -183,5 +180,120 @@ class _CreatePostViewState extends State<CreatePostView> {
         }
       }
     }
+  }
+
+  void _clearFormData() {
+    nameController.clear();
+    descriptionController.clear();
+    formKey.currentState?.reset();
+    setState(() {
+      privacy = 'public';
+      selectedImages.clear();
+    });
+  }
+
+  Widget _buildImagePicker() {
+    if (selectedImages.isEmpty) {
+      return InkWell(
+        onTap: _pickImages,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          height: 140,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.grey),
+            color: Colors.grey[50],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(AppImages.upload, width: 40, height: 40),
+              sh8,
+              Text(
+                'Upload multiple photos',
+                style: h5.copyWith(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: selectedImages.length + 1,
+      itemBuilder: (context, index) {
+        if (index == selectedImages.length) {
+          return InkWell(
+            onTap: _pickImages,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.grey),
+                color: Colors.grey[50],
+              ),
+              child: const Icon(Icons.add_photo_alternate_outlined, size: 36),
+            ),
+          );
+        }
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(selectedImages[index], fit: BoxFit.cover),
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: InkWell(
+                onTap: () => setState(() => selectedImages.removeAt(index)),
+                child: const CircleAvatar(
+                  radius: 13,
+                  backgroundColor: Colors.black54,
+                  child: Icon(Icons.close, size: 17, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickImages() async {
+    try {
+      final List<XFile> images = await _imagePicker.pickMultiImage();
+      if (images.isEmpty || !mounted) return;
+
+      final existingPaths = selectedImages.map((image) => image.path).toSet();
+      setState(() {
+        selectedImages.addAll(
+          images
+              .where((image) => !existingPaths.contains(image.path))
+              .map((image) => File(image.path)),
+        );
+      });
+    } catch (error) {
+      if (mounted) {
+        showSnackBarMessage(context, 'Failed to select images: $error', true);
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
   }
 }

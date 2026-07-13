@@ -30,6 +30,10 @@ class ProfileData {
         required this.photoUrl,
         required this.bio,
         required this.address,
+        required this.addressTwo,
+        required this.poBox,
+        required this.city,
+        required this.postalCode,
         required this.scores,
         required this.status,
         required this.dataId,
@@ -45,6 +49,10 @@ class ProfileData {
     final String? photoUrl;
     final String? bio;
     final String? address;
+    final String? addressTwo;
+    final String? poBox;
+    final String? city;
+    final int? postalCode;
     final dynamic scores;
     final String? status;
     final String? dataId;
@@ -61,6 +69,12 @@ class ProfileData {
             photoUrl: json["photoUrl"],
             bio: json["bio"],
             address: json["address"],
+            addressTwo: json["addressTwo"],
+            poBox: json["poBox"],
+            city: json["city"],
+            postalCode: json["postalCode"] is int
+                ? json["postalCode"]
+                : int.tryParse(json["postalCode"]?.toString() ?? ""),
             scores: json["scores"],
             status: json["status"],
             dataId: json["id"],

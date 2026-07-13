@@ -55,7 +55,8 @@ class AllClubForunController extends GetxController {
       _errorMessage = null;
       isSuccess = true;
 
-      ClubForumModel clubForumModel = ClubForumModel.fromJson(response.responseData);
+      ClubForumModel clubForumModel =
+          ClubForumModel.fromJson(response.responseData);
       postList.addAll(clubForumModel.data);
 
       if (clubForumModel.meta?.totalPage != null) {
@@ -68,6 +69,17 @@ class AllClubForunController extends GetxController {
     _inProgress = false;
     update();
     return isSuccess;
+  }
+
+  Future<bool> refreshClubForum(String id) async {
+    if (_inProgress) return false;
+
+    page = 0;
+    lastPage = null;
+    postList.clear();
+    update();
+
+    return getAllClubForum(id);
   }
 
   void updatePostLike(String postId, bool isLiked, int likeCount) {

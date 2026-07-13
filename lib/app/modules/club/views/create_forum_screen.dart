@@ -1,7 +1,5 @@
 import 'package:dirve_society/app/modules/club/controllers/all_club_forum_controller.dart';
 import 'package:dirve_society/app/modules/club/controllers/create_forum_controller.dart';
-import 'package:dirve_society/app/modules/club/views/club_view.dart';
-import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +25,6 @@ class CreateForumView extends StatefulWidget {
 class _CreateForumViewState extends State<CreateForumView> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final MyClubController myClubController = Get.put(MyClubController());
   final CreateForumController createForumController =
       Get.put(CreateForumController());
   final AllClubForunController allClubForumController =
@@ -102,7 +99,7 @@ class _CreateForumViewState extends State<CreateForumView> {
         ),
         child: Obx(
           () => CustomButton(
-            text: 'Cerate Forum',
+            text: 'Create Forum',
             isLoading: createForumController.inProgress,
             onPressedAsync: () async {
               await createForum();
@@ -121,12 +118,15 @@ class _CreateForumViewState extends State<CreateForumView> {
           widget.clubId ?? '');
 
       if (isSuccess) {
-        await allClubForumController.getAllClubForum(widget.clubId ?? '');
-        await Get.to(() => ClubView(
-              isAuthor: true,
-              authorId: widget.authorId ?? '',
-              id: widget.clubId ?? '',
-            ));
+        await allClubForumController.refreshClubForum(widget.clubId ?? '');
+
+        if (mounted) {
+          titleController.clear();
+          descriptionController.clear();
+          formKey.currentState?.reset();
+          showSnackBarMessage(context, 'Forum uploaded successfully');
+          Navigator.of(context).pop(true);
+        }
       } else {
         if (mounted) {
           showSnackBarMessage(
@@ -137,5 +137,12 @@ class _CreateForumViewState extends State<CreateForumView> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    super.dispose();
   }
 }

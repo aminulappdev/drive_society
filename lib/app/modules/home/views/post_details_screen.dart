@@ -70,7 +70,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 profileImage: feed?.author?.photoUrl ?? '',
                 clubName: feed?.author?.name ?? '',
                 userName: feed?.author?.name ?? 'Unknown',
-                contentPath: feed!.content.isNotEmpty ? feed.content[0] : '',
+                contentPaths: feed!.content,
                 description: feed.description ?? '',
                 hashtags: feed.tags.isNotEmpty ? feed.tags[0] : '',
                 date: dateFormatter.getRelativeTimeFormat(),

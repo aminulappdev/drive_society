@@ -28,12 +28,16 @@ class _HomeViewState extends State<HomeView> {
         title: Padding(
           padding: const EdgeInsets.only(left: 4),
           child: CircleAvatar(
-            radius: 25,
-            backgroundColor: AppColors.white,
-            backgroundImage: StorageUtil.getData(StorageUtil.profilePhotoUrl) !=
-                    null
-                ? NetworkImage(StorageUtil.getData(StorageUtil.profilePhotoUrl))
-                : AssetImage(AppImages.noImage),
+            radius: 20,
+            backgroundColor: AppColors.grey,
+            child: CircleAvatar(
+              radius: 19,
+              backgroundColor: AppColors.white,
+              backgroundImage: StorageUtil.getData(StorageUtil.profilePhotoUrl) !=
+                      null
+                  ? NetworkImage(StorageUtil.getData(StorageUtil.profilePhotoUrl))
+                  : AssetImage(AppImages.noImage),
+            ),
           ),
         ),
         automaticallyImplyLeading: false,

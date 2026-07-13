@@ -15,7 +15,7 @@ import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
-
+ 
 class EditProfileDetailsView extends StatefulWidget {
   const EditProfileDetailsView({super.key});
 
@@ -28,6 +28,10 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController addressTwoController = TextEditingController();
+  final TextEditingController poBoxController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController postalCodeController = TextEditingController();
   final EditProfileController editProfileController =
       Get.put(EditProfileController());
   final ProfileController profileController = Get.put(ProfileController());
@@ -48,6 +52,13 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
     bioController.text = StorageUtil.getData(StorageUtil.profileBio) ?? '';
     addressController.text =
         StorageUtil.getData(StorageUtil.profileAddress) ?? '';
+    addressTwoController.text =
+        StorageUtil.getData(StorageUtil.profileAddressTwo) ?? '';
+    poBoxController.text =
+        StorageUtil.getData(StorageUtil.profilePoBox) ?? '';
+    cityController.text = StorageUtil.getData(StorageUtil.profileCity) ?? '';
+    postalCodeController.text =
+        StorageUtil.getData(StorageUtil.profilePostalCode)?.toString() ?? '';
 
     print('Name: ${StorageUtil.getData(StorageUtil.profileName)}');
     print('Email: ${StorageUtil.getData(StorageUtil.profileEmail)}');
@@ -218,6 +229,52 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                         hintTextStyle: const TextStyle(color: Colors.black),
                       ),
                       sh20,
+                      Text('Address Two', style: h5),
+                      sh5,
+                      CustomTextField(
+                        onChange: (String value) {},
+                        textColor: Colors.black,
+                        controller: addressTwoController,
+                        hintTextStyle: const TextStyle(color: Colors.black),
+                      ),
+                      sh20,
+                      Text('PO Box', style: h5),
+                      sh5,
+                      CustomTextField(
+                        onChange: (String value) {},
+                        textColor: Colors.black,
+                        controller: poBoxController,
+                        hintTextStyle: const TextStyle(color: Colors.black),
+                      ),
+                      sh20,
+                      Text('City', style: h5),
+                      sh5,
+                      CustomTextField(
+                        onChange: (String value) {},
+                        textColor: Colors.black,
+                        controller: cityController,
+                        hintTextStyle: const TextStyle(color: Colors.black),
+                      ),
+                      sh20,
+                      Text('Postal Code', style: h5),
+                      sh5,
+                      CustomTextField(
+                        onChange: (String value) {},
+                        textColor: Colors.black,
+                        controller: postalCodeController,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Postal code is required';
+                          }
+                          if (int.tryParse(value.trim()) == null) {
+                            return 'Enter a valid postal code';
+                          }
+                          return null;
+                        },
+                        hintTextStyle: const TextStyle(color: Colors.black),
+                      ),
+                      sh20,
                     ],
                   ),
                 ),
@@ -248,6 +305,10 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
         nameController.text,
         bioController.text,
         addressController.text,
+        addressTwoController.text,
+        poBoxController.text,
+        cityController.text,
+        int.parse(postalCodeController.text.trim()),
         image,
         cover: bannerImage,
       );
@@ -267,5 +328,18 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    bioController.dispose();
+    addressController.dispose();
+    addressTwoController.dispose();
+    poBoxController.dispose();
+    cityController.dispose();
+    postalCodeController.dispose();
+    super.dispose();
   }
 }

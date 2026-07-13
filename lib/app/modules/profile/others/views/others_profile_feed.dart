@@ -46,8 +46,10 @@ class _OthersFeedScreenState extends State<OthersFeedScreen> {
                   );
                 } else {
                   return GridView.builder(
+                    padding: const EdgeInsets.all(0),
                     itemCount: controller.allPostList?.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 1,
                       mainAxisSpacing: 16,

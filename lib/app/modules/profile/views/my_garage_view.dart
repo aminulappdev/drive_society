@@ -4,6 +4,7 @@ import 'package:dirve_society/app/modules/profile/controllers/my_garage_controll
 import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/profile_header_layout.dart';
 import 'package:dirve_society/common/widgets/toogle_button.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -35,258 +36,175 @@ class _MyGarageViewState extends State<MyGarageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.mainColor,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
+    return Scaffold(
+      backgroundColor: AppColors.mainColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ProfileHeaderLayout(
+            title: StorageUtil.getData(StorageUtil.profileName) ?? '',
+            coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
+            profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
+            subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
+            onBack: Get.back,
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Positioned(
-                  child: SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: StorageUtil.getData(StorageUtil.profileCoverPhoto) !=
-                            null
-                        ? Image.network(
-                            StorageUtil.getData(StorageUtil.profileCoverPhoto),
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Image.asset(
-                              AppImages.noImage,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Image.asset(AppImages.noBanner),
-                  ),
+                Icon(
+                  Icons.star,
+                  size: 22,
+                  color: AppColors.darkRed,
                 ),
-                Positioned(
-                  left: 20,
-                  top: 20, // Added top padding for better positioning
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: ShapeDecoration(
-                        shape: const CircleBorder(),
-                        color: AppColors.black.withOpacity(0.3),
-                      ),
-                      child: Image.asset(
-                        AppImages.back,
-                        scale: 4,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -25,
-                  left: 20,
-                  child: CircleAvatar(
-                    radius: 45,
-                    backgroundColor: AppColors.white,
-                    backgroundImage: StorageUtil.getData(
-                                StorageUtil.profilePhotoUrl) !=
-                            null
-                        ? NetworkImage(
-                            StorageUtil.getData(StorageUtil.profilePhotoUrl))
-                        : const AssetImage(AppImages.noImage),
-                  ),
-                ),
-                Positioned(
-                  right: 20,
-                  left: Get.width * 0.32,
-                  bottom: 0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                    color: Colors.grey[300]?.withOpacity(0.5),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            StorageUtil.getData(StorageUtil.profileName) ?? '',
-                            style: h1.copyWith(
-                              fontSize: 20,
-                              color: AppColors.darkRed,
-                            ),
-                          ),
-                          sw8,
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                size: 22,
-                                color: AppColors.darkRed,
-                              ),
-                              sw5,
-                              Text(
-                                StorageUtil.getData(StorageUtil.profileAvgRating)
-                                        ?.toString() ??
-                                    '0',
-                                style: h3.copyWith(
-                                  color: AppColors.darkRed,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                sw5,
+                Text(
+                  StorageUtil.getData(StorageUtil.profileAvgRating)
+                          ?.toString() ??
+                      '0',
+                  style: h3.copyWith(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
-            sh40,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Descriptions',
-                        style: h5.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.orange[600],
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${StorageUtil.getData(StorageUtil.profileScores) ?? 0} Points',
-                            style: h6,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  sh5,
-                  ReadMoreText(
-                    StorageUtil.getData(StorageUtil.profileBio) ?? '',
-                    trimLines: 2,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: 'Show More',
-                    trimExpandedText: ' Show Less',
-                    style: h6,
-                    moreStyle: h6.copyWith(
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
+          ),
+          sh16,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Descriptions',
+                      style: h5.copyWith(fontWeight: FontWeight.w600),
                     ),
-                    lessStyle: h6.copyWith(
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.orange[600],
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${StorageUtil.getData(StorageUtil.profileScores) ?? 0} Points',
+                          style: h6,
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+                sh5,
+                ReadMoreText(
+                  StorageUtil.getData(StorageUtil.profileBio) ?? '',
+                  trimLines: 2,
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: 'Show More',
+                  trimExpandedText: ' Show Less',
+                  style: h6,
+                  moreStyle: h6.copyWith(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
-            ),
-            sh20,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'My Garage',
-                    style: h1.copyWith(fontSize: 20),
-                  ),
-                  CustomButton(
-                    height: 38,
-                    width: 135,
-                    text: 'Add Car',
-                    imageAssetPath: AppImages.add,
-                    iconColor: AppColors.white,
-                    onPressed: () {
-                      Get.to(() => AddCarView());
-                    },
-                  ),
-                ],
-              ),
-            ),
-            GetBuilder<MyGarageController>(builder: (controller) {
-              if (controller.inProgress) {
-                return const SizedBox(
-                  height: 300,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (controller.myGarageList == null ||
-                  controller.myGarageList!.isEmpty) {
-                return const SizedBox(
-                  height: 300,
-                  child: Center(child: Text('No Car Found')),
-                );
-              }
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: controller.myGarageList?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final dateFormatter = DateFormatter(
-                        controller.myGarageList![index].createdAt ??
-                            DateTime.now(),
-                      );
-                      // Check if images list is not empty, otherwise use fallback
-                      // final imageUrl =
-                      //     controller.myGarageList![index].images.isNotEmpty
-                      //         ? controller.myGarageList![index].images[0]
-                      //         : AppImages.noImage;
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          top: index == 0 ? 12 : 8,
-                          bottom: index == controller.myGarageList!.length - 1
-                              ? 20
-                              : 0,
-                        ),
-                        child: MarketPlaceWidget(
-                          height: 200,
-                          name: controller.myGarageList![index].brand ?? '',
-                          price:
-                              controller.myGarageList![index].price.toString(),
-                          date: dateFormatter.getFullDateFormat(),
-                          imageUrl:
-                              controller.myGarageList![index].banner ?? '',
-                          onTap: () {
-                            Get.to(() => ListingDetailsView(
-                                  id: controller.myGarageList![index].id ?? '',
-                                ));
-                          },
-                          taggle: ToggleButton(
-                            isToggled: controller.myGarageList![index].isSale == true
-                                ? true
-                                : false,
-                            onToggle: (value) => sellTaggle(
-                                controller.myGarageList![index].id ?? ''),
-                          ),
-                        ),
-                      );
-                    },
+                  lessStyle: h6.copyWith(
+                    color: AppColors.grey,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ],
+            ),
+          ),
+          sh20,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'My Garage',
+                  style: h1.copyWith(fontSize: 20),
+                ),
+                CustomButton(
+                  height: 38,
+                  width: 135,
+                  text: 'Add Car',
+                  imageAssetPath: AppImages.add,
+                  iconColor: AppColors.white,
+                  onPressed: () {
+                    Get.to(() => AddCarView());
+                  },
+                ),
+              ],
+            ),
+          ),
+          GetBuilder<MyGarageController>(builder: (controller) {
+            if (controller.inProgress) {
+              return const SizedBox(
+                height: 300,
+                child: Center(child: CircularProgressIndicator()),
               );
-            }),
-          ],
-        ),
+            }
+            if (controller.myGarageList == null ||
+                controller.myGarageList!.isEmpty) {
+              return const SizedBox(
+                height: 300,
+                child: Center(child: Text('No Car Found')),
+              );
+            }
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: controller.myGarageList?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final dateFormatter = DateFormatter(
+                      controller.myGarageList![index].createdAt ??
+                          DateTime.now(),
+                    );
+                    // Check if images list is not empty, otherwise use fallback
+                    // final imageUrl =
+                    //     controller.myGarageList![index].images.isNotEmpty
+                    //         ? controller.myGarageList![index].images[0]
+                    //         : AppImages.noImage;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        top: index == 0 ? 12 : 8,
+                        bottom: index == controller.myGarageList!.length - 1
+                            ? 20
+                            : 0,
+                      ),
+                      child: MarketPlaceWidget(
+                        height: 200,
+                        name: controller.myGarageList![index].brand ?? '',
+                        price: controller.myGarageList![index].price.toString(),
+                        date: dateFormatter.getFullDateFormat(),
+                        imageUrl: controller.myGarageList![index].banner ?? '',
+                        onTap: () {
+                          Get.to(() => ListingDetailsView(
+                                id: controller.myGarageList![index].id ?? '',
+                              ));
+                        },
+                        taggle: ToggleButton(
+                          isToggled:
+                              controller.myGarageList![index].isSale == true
+                                  ? true
+                                  : false,
+                          onToggle: (value) => sellTaggle(
+                              controller.myGarageList![index].id ?? ''),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }

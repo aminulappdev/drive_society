@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 
 class CreatePostController extends GetxController {
   // ignore: prefer_final_fields
-  RxBool _inProgress = false.obs; // NEW CHANGE: Changed to RxBool
+  RxBool _inProgress = false.obs; // NEW CHANGE: Changed to RxBool 
   bool get inProgress =>
       _inProgress.value; // NEW CHANGE: Updated getter to use .value
 
@@ -20,7 +20,7 @@ class CreatePostController extends GetxController {
 
   /// 🔁 Update Profile Function
   Future<bool> createPost(
-      String name, String privacy, String description, File? image,
+      String name, String privacy, String description, List<File> images,
       {File? cover, String? clubId}) async {
     if (_inProgress.value) {
       // NEW CHANGE: Added check to prevent multiple calls
@@ -63,9 +63,7 @@ class CreatePostController extends GetxController {
       request.fields['data'] = jsonEncode(jsonFields);
 
       // ✅ Add image if available
-      if (image != null) {
-        print('Image ache ekhane ................................');
-        print(image);
+      for (final image in images) {
         String imagePath = image.path;
         String? mimeType = lookupMimeType(imagePath) ?? 'image/jpeg';
 

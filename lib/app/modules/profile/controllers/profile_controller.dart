@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class ProfileController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
-
+ 
   final RxBool _inProgress = false.obs;
   bool get inProgress => _inProgress.value;
 
@@ -48,34 +48,30 @@ class ProfileController extends GetxController {
       // Save profile data to local storage
       final profile = profileModel.value?.data;
       if (profile != null) {
-        if (profile.id != null)
-          await StorageUtil.saveData(StorageUtil.profileId, profile.id);
-        if (profile.name != null)
-          await StorageUtil.saveData(StorageUtil.profileName, profile.name);
-        if (profile.email != null)
-          await StorageUtil.saveData(StorageUtil.profileEmail, profile.email);
-          if (profile.email != null)
-          await StorageUtil.saveData(StorageUtil.isPaid, profile.isPremiumAccount);
-        if (profile.photoUrl != null)
-          await StorageUtil.saveData(
-              StorageUtil.profilePhotoUrl, profile.photoUrl);
-        if (profile.bio != null)
-          await StorageUtil.saveData(StorageUtil.profileBio, profile.bio);
-        if (profile.address != null)
-          await StorageUtil.saveData(
-              StorageUtil.profileAddress, profile.address);
-        if (profile.scores != null)
-          await StorageUtil.saveData(StorageUtil.profileScores, profile.scores);
-        if (profile.status != null)
-          await StorageUtil.saveData(StorageUtil.profileStatus, profile.status);
-        if (profile.dataId != null)
-          await StorageUtil.saveData(StorageUtil.profileDataId, profile.dataId);
-        if (profile.avgRating != null)
-          await StorageUtil.saveData(
-              StorageUtil.profileAvgRating, profile.avgRating);
-        if (profile.coverPhoto != null)
-          await StorageUtil.saveData(
-              StorageUtil.profileCoverPhoto, profile.coverPhoto);
+        await _cacheProfileValue(StorageUtil.profileId, profile.id);
+        await _cacheProfileValue(StorageUtil.profileName, profile.name);
+        await _cacheProfileValue(StorageUtil.profileEmail, profile.email);
+        await _cacheProfileValue(
+            StorageUtil.isPaid, profile.isPremiumAccount);
+        await _cacheProfileValue(
+            StorageUtil.profilePhotoUrl, profile.photoUrl);
+        await _cacheProfileValue(StorageUtil.profileBio, profile.bio);
+        await _cacheProfileValue(StorageUtil.profileAddress, profile.address);
+        await _cacheProfileValue(
+            StorageUtil.profileAddressTwo, profile.addressTwo);
+        await _cacheProfileValue(StorageUtil.profilePoBox, profile.poBox);
+        await _cacheProfileValue(StorageUtil.profileCity, profile.city);
+        await _cacheProfileValue(
+            StorageUtil.profilePostalCode, profile.postalCode);
+        await _cacheProfileValue(StorageUtil.profileScores, profile.scores);
+        await _cacheProfileValue(StorageUtil.profileStatus, profile.status);
+        await _cacheProfileValue(StorageUtil.profileDataId, profile.dataId);
+        await _cacheProfileValue(
+            StorageUtil.profileCreatedAt, profile.createdAt?.toIso8601String());
+        await _cacheProfileValue(
+            StorageUtil.profileAvgRating, profile.avgRating);
+        await _cacheProfileValue(
+            StorageUtil.profileCoverPhoto, profile.coverPhoto);
       }
 
       _inProgress.value = false;
@@ -84,6 +80,14 @@ class ProfileController extends GetxController {
       _errorMessage.value = response.errorMessage;
       _inProgress.value = false;
       return false;
+    }
+  }
+
+  Future<void> _cacheProfileValue(String key, dynamic value) async {
+    if (value == null) {
+      await StorageUtil.deleteData(key);
+    } else {
+      await StorageUtil.saveData(key, value);
     }
   }
 

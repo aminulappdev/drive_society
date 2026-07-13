@@ -19,8 +19,16 @@ class EditProfileController extends GetxController {
 
   /// 🔁 Update Profile Function
   Future<bool> updateProfile(
-      String name, String bio, String address, File? image,
-      {File? cover}) async {
+    String name,
+    String bio,
+    String address,
+    String addressTwo,
+    String poBox,
+    String city,
+    int postalCode,
+    File? image, {
+    File? cover,
+  }) async {
     if (_inProgress.value) {
       // Prevent multiple calls while in progress
       return false;
@@ -30,7 +38,10 @@ class EditProfileController extends GetxController {
     _inProgress.value = true; // Updated to use .value
     update();
 
-    print('Name: $name, Bio: $bio, Address: $address, Image: $image');
+    print(
+      'Name: $name, Bio: $bio, Address: $address, Address Two: $addressTwo, '
+      'PO Box: $poBox, City: $city, Postal Code: $postalCode, Image: $image',
+    );
 
     try {
       String? token = StorageUtil.getData(StorageUtil.userAccessToken);
@@ -51,7 +62,11 @@ class EditProfileController extends GetxController {
       Map<String, dynamic> jsonFields = {
         "name": name,
         "bio": bio,
-        "address": address
+        "address": address,
+        "addressTwo": addressTwo,
+        "poBox": poBox,
+        "city": city,
+        "postalCode": postalCode,
       };
 
       request.fields['data'] = jsonEncode(jsonFields);

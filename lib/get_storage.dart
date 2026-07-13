@@ -28,6 +28,10 @@ class StorageUtil {
   static String profilePhotoUrl = 'profile-photo-url';
   static String profileBio = 'profile-bio';
   static String profileAddress = 'profile-address';
+  static String profileAddressTwo = 'profile-address-two';
+  static String profilePoBox = 'profile-po-box';
+  static String profileCity = 'profile-city';
+  static String profilePostalCode = 'profile-postal-code';
   static String profileScores = 'profile-scores';
   static String profileStatus = 'profile-status';
   static String profileDataId = 'profile-data-id';

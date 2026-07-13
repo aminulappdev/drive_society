@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:dirve_society/app/modules/profile/controllers/add_car_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/my_garage_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
@@ -36,15 +38,18 @@ class _AddCarViewState extends State<AddCarView> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final AddCarController addCarController = Get.put(AddCarController());
+  final MyGarageController myGarageController =
+      Get.put(MyGarageController());
 
   File? bannerImage;
-  List<File?> carImages = [null, null, null]; // For Front, Side, Sole
+  final List<File> carImages = [];
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
+  final ImagePicker _carImagePicker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.mainColor,
+    return Scaffold( 
+      backgroundColor: AppColors.mainColor, 
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
@@ -373,7 +378,7 @@ class _AddCarViewState extends State<AddCarView> {
                   imagePath: AppImages.upload,
                   imageFile: bannerImage,
                   label: 'Upload',
-                  iconSize: 48,
+                  iconSize: 18,
                 ),
                 sh8,
                 Text(
@@ -381,65 +386,7 @@ class _AddCarViewState extends State<AddCarView> {
                   style: h5,
                 ),
                 sh8,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    UploadWidget(
-                      height: 100,
-                      width: 100,
-                      onTap: () {
-                        _imagePickerHelper.showAlertDialog(context,
-                            (File? pickedImage) {
-                          if (pickedImage != null) {
-                            setState(() {
-                              carImages[0] = pickedImage;
-                            });
-                          }
-                        });
-                      },
-                      imagePath: AppImages.add,
-                      imageFile: carImages[0],
-                      label: 'Front',
-                      iconSize: 20,
-                    ),
-                    UploadWidget(
-                      height: 100,
-                      width: 100,
-                      onTap: () {
-                        _imagePickerHelper.showAlertDialog(context,
-                            (File? pickedImage) {
-                          if (pickedImage != null) {
-                            setState(() {
-                              carImages[1] = pickedImage;
-                            });
-                          }
-                        });
-                      },
-                      imagePath: AppImages.add,
-                      imageFile: carImages[1],
-                      label: 'Side',
-                      iconSize: 20,
-                    ),
-                    UploadWidget(
-                      height: 100,
-                      width: 100,
-                      onTap: () {
-                        _imagePickerHelper.showAlertDialog(context,
-                            (File? pickedImage) {
-                          if (pickedImage != null) {
-                            setState(() {
-                              carImages[2] = pickedImage;
-                            });
-                          }
-                        });
-                      },
-                      imagePath: AppImages.add,
-                      imageFile: carImages[2],
-                      label: 'Sole',
-                      iconSize: 20,
-                    ),
-                  ],
-                ),
+                _buildCarImagePicker(),
                 sh100,
               ],
             ),
@@ -488,10 +435,10 @@ class _AddCarViewState extends State<AddCarView> {
     }
 
     // Validate car photos (at least one required)
-    if (carImages.every((image) => image == null)) {
+    if (carImages.isEmpty) {
       showSnackBarMessage(
         context,
-        'Please upload at least one car photo (Front, Side, or Sole).',
+        'Please upload at least one car photo.',
         true,
       );
       return;
@@ -527,6 +474,9 @@ class _AddCarViewState extends State<AddCarView> {
     );
 
     if (isSuccess) {
+      // Refresh GET /cars/my-car before returning to the garage screen.
+      await myGarageController.getMyGarage();
+
       if (mounted) {
         // Clear all form data
         brandController.clear();
@@ -541,10 +491,14 @@ class _AddCarViewState extends State<AddCarView> {
         conditionController.text = 'New'; // Reset to default
         setState(() {
           bannerImage = null;
-          carImages = [null, null, null];
+          carImages.clear();
         });
-        showSnackBarMessage(context, 'Car added successfully');
-        Get.back();
+        Get.back(result: true);
+        Get.snackbar(
+          'Success',
+          'Car added successfully',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     } else {
       if (mounted) {
@@ -553,6 +507,104 @@ class _AddCarViewState extends State<AddCarView> {
           addCarController.errorMessage ?? 'Failed to add car',
           true,
         );
+      }
+    }
+  }
+
+  Widget _buildCarImagePicker() {
+    if (carImages.isEmpty) {
+      return InkWell(
+        onTap: _pickCarImages,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          height: 140,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.grey),
+            color: Colors.grey[50],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(AppImages.upload, width: 40, height: 40),
+              sh8,
+              Text(
+                'Upload up to 3 photos',
+                style: h5.copyWith(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final showAddButton = carImages.length < 3;
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: carImages.length + (showAddButton ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (showAddButton && index == carImages.length) {
+          return InkWell(
+            onTap: _pickCarImages,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.grey),
+                color: Colors.grey[50],
+              ),
+              child: const Icon(Icons.add_photo_alternate_outlined, size: 36),
+            ),
+          );
+        }
+
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(carImages[index], fit: BoxFit.cover),
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: InkWell(
+                onTap: () => setState(() => carImages.removeAt(index)),
+                child: const CircleAvatar(
+                  radius: 13,
+                  backgroundColor: Colors.black54,
+                  child: Icon(Icons.close, size: 17, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickCarImages() async {
+    try {
+      final pickedImages = await _carImagePicker.pickMultiImage();
+      if (pickedImages.isEmpty || !mounted) return;
+
+      final existingPaths = carImages.map((image) => image.path).toSet();
+      final newImages = pickedImages
+          .where((image) => !existingPaths.contains(image.path))
+          .take(3 - carImages.length)
+          .map((image) => File(image.path));
+
+      setState(() => carImages.addAll(newImages));
+    } catch (error) {
+      if (mounted) {
+        showSnackBarMessage(context, 'Failed to select images: $error', true);
       }
     }
   }

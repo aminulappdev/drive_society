@@ -215,7 +215,7 @@ class _ClubViewState extends State<ClubView> {
             children: [
               Container(
                 width: double.infinity,
-                height: screenHeight * 0.3,
+                height: screenHeight * 0.25,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(controller.clubDetails!.coverPhoto ??
@@ -227,241 +227,242 @@ class _ClubViewState extends State<ClubView> {
               Container(
                 color: AppColors.white.withOpacity(0.15),
               ),
-              SafeArea(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                shape: CircleBorder(),
-                                color: AppColors.black.withOpacity(0.3),
-                              ),
-                              child: Image.asset(
-                                AppImages.back,
-                                scale: 4,
-                              ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Container(
+                            decoration: ShapeDecoration(
+                              shape: CircleBorder(),
+                              color: AppColors.black.withOpacity(0.3),
+                            ),
+                            child: Image.asset(
+                              AppImages.back,
+                              scale: 4,
                             ),
                           ),
-                          GestureDetector(
-                            key: menuButtonKey, // Assign key to menu button
-                            onTap: () {
-                              // Get the position of the menu button
-                              final RenderBox renderBox = menuButtonKey
-                                  .currentContext!
-                                  .findRenderObject() as RenderBox;
-                              final buttonPosition =
-                                  renderBox.localToGlobal(Offset.zero);
+                        ),
+                        GestureDetector(
+                          key: menuButtonKey, // Assign key to menu button
+                          onTap: () {
+                            // Get the position of the menu button
+                            final RenderBox renderBox =
+                                menuButtonKey.currentContext!.findRenderObject()
+                                    as RenderBox;
+                            final buttonPosition =
+                                renderBox.localToGlobal(Offset.zero);
 
-                              if (_isMenuOpen) {
-                                _closeMenu();
-                              } else {
-                                _showMenu(context, buttonPosition);
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(8),
-                              decoration: ShapeDecoration(
-                                shape: CircleBorder(),
-                                color: AppColors.black.withOpacity(0.3),
-                              ),
-                              child: Image.asset(
-                                AppImages.menu,
-                                scale: 4,
-                                color: AppColors.white,
-                              ),
+                            if (_isMenuOpen) {
+                              _closeMenu();
+                            } else {
+                              _showMenu(context, buttonPosition);
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: ShapeDecoration(
+                              shape: CircleBorder(),
+                              color: AppColors.black.withOpacity(0.3),
+                            ),
+                            child: Image.asset(
+                              AppImages.menu,
+                              scale: 4,
+                              color: AppColors.white,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: screenHeight * 0.13),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundColor: AppColors.white,
-                            backgroundImage: NetworkImage(controller
-                                    .clubDetails!.profilePhoto ??
-                                'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
+                  ),
+                  SizedBox(height: screenHeight * 0.08),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundColor: AppColors.white,
+                          backgroundImage: NetworkImage(controller
+                                  .clubDetails!.profilePhoto ??
+                              'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
+                        ),
+                        sw12,
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(155, 226, 228, 228),
                           ),
-                          sw12,
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color.fromARGB(155, 226, 228, 228),
-                            ),
-                            width: 140,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.clubDetails!.name ?? '',
-                                    style: h1.copyWith(
-                                        fontSize: 20, color: AppColors.darkRed),
-                                  ),
-                                  sh5,
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        AppImages.groupLight,
-                                        scale: 4,
-                                      ),
-                                      sw5,
-                                      Text(
-                                        '${controller.clubDetails!.member.toString()} Members',
-                                        style: h6,
-                                      ),
-                                    ],
-                                  ),
-                                  sh5,
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Image.asset(
-                                        AppImages.public,
-                                        scale: 4,
-                                      ),
-                                      sw5,
-                                      Text(controller.clubDetails!.type ?? '',
-                                          style: h6),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(() => InviteScreen(
-                                    authorId: widget.authorId,
-                                    id: widget.id,
-                                  ));
-                            },
-                            child: Row(
+                          width: 140,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  AppImages.invite,
-                                  scale: 4,
-                                ),
-                                sw8,
                                 Text(
-                                  'Invite',
-                                  style: h5.copyWith(
-                                    color: AppColors.darkRed,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  controller.clubDetails!.name ?? '',
+                                  style: h1.copyWith(
+                                      fontSize: 20, color: AppColors.darkRed),
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.groupLight,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(
+                                      '${controller.clubDetails!.member.toString()} Members',
+                                      style: h6,
+                                    ),
+                                  ],
+                                ),
+                                sh5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      AppImages.public,
+                                      scale: 4,
+                                    ),
+                                    sw5,
+                                    Text(controller.clubDetails!.type ?? '',
+                                        style: h6),
+                                  ],
                                 ),
                               ],
                             ),
-                          )
+                          ),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Get.to(() => InviteScreen(
+                                  authorId: widget.authorId,
+                                  id: widget.id,
+                                ));
+                          },
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                AppImages.invite,
+                                scale: 4,
+                              ),
+                              sw8,
+                              Text(
+                                'Invite',
+                                style: h5.copyWith(
+                                  color: AppColors.darkRed,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  sh20,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8.0),
+                    child: Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.silver,
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = 0;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    color: selectedIndex == 0
+                                        ? AppColors.darkRed
+                                        : AppColors.transparent),
+                                child: Center(
+                                  child: Text(
+                                    'Feed',
+                                    style: TextStyle(
+                                        fontWeight: selectedIndex == 0
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: selectedIndex == 0
+                                            ? AppColors.white
+                                            : AppColors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          sw8,
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = 1;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(25.0),
+                                    color: selectedIndex == 1
+                                        ? AppColors.darkRed
+                                        : AppColors.transparent),
+                                child: Center(
+                                  child: Text(
+                                    'Forum',
+                                    style: TextStyle(
+                                        fontWeight: selectedIndex == 1
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                        color: selectedIndex == 1
+                                            ? AppColors.white
+                                            : AppColors.black),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    sh20,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 8.0),
-                      child: Container(
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: AppColors.silver,
-                          borderRadius: BorderRadius.circular(40),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedIndex = 0;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      color: selectedIndex == 0
-                                          ? AppColors.darkRed
-                                          : AppColors.transparent),
-                                  child: Center(
-                                    child: Text(
-                                      'FEED',
-                                      style: TextStyle(
-                                          fontWeight: selectedIndex == 0
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                          color: selectedIndex == 0
-                                              ? AppColors.white
-                                              : AppColors.black),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            sw8,
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedIndex = 1;
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25.0),
-                                      color: selectedIndex == 1
-                                          ? AppColors.darkRed
-                                          : AppColors.transparent),
-                                  child: Center(
-                                    child: Text(
-                                      'FORUM',
-                                      style: TextStyle(
-                                          fontWeight: selectedIndex == 1
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                          color: selectedIndex == 1
-                                              ? AppColors.white
-                                              : AppColors.black),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: selectedIndex == 0
-                          ? FeedScreen(
-                              clubId: widget.id,
-                              authorId: widget.authorId,
-                            )
-                          : ForumScreen(
-                              clubId: widget.id,
-                              authorId: widget.authorId,
-                            ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Expanded(
+                    child: selectedIndex == 0
+                        ? FeedScreen(
+                            clubId: widget.id,
+                            authorId: widget.authorId,
+                          )
+                        : ForumScreen(
+                            clubId: widget.id,
+                            authorId: widget.authorId,
+                          ),
+                  ),
+                ],
               ),
             ],
           );

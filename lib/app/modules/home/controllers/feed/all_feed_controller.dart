@@ -7,11 +7,11 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class AllFeedController extends GetxController {
-  final NetworkCaller networkCaller = Get.put(NetworkCaller()); 
+  final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
   bool get inProgress => _inProgress;
- 
+
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
@@ -25,7 +25,7 @@ class AllFeedController extends GetxController {
   int page = 0;
 
   int? lastPage;
- 
+
   @override
   void onInit() {
     getAllFeed();
@@ -71,8 +71,20 @@ class AllFeedController extends GetxController {
     return isSuccess;
   }
 
+  Future<bool> refreshFeed() async {
+    if (_inProgress) return false;
+
+    page = 0;
+    lastPage = null;
+    postList.clear();
+    update();
+
+    return getAllFeed();
+  }
+
   void updatePostLike(String postId, bool isLiked, int likeCount) {
-    print('Updating post like for postId: $postId, isLiked: $isLiked, likeCount: $likeCount');
+    print(
+        'Updating post like for postId: $postId, isLiked: $isLiked, likeCount: $likeCount');
     int index = postList.indexWhere((post) => post.contentMeta?.id == postId);
     if (index != -1) {
       print('Post found at index: $index');
@@ -171,7 +183,8 @@ class AllFeedController extends GetxController {
   }
 
   void updatePostComment(String postId, int commentCount) {
-    print('Updating post comment for postId: $postId, commentCount: $commentCount');
+    print(
+        'Updating post comment for postId: $postId, commentCount: $commentCount');
     int index = postList.indexWhere((post) => post.id == postId);
     if (index != -1) {
       print('Post found at index: $index');

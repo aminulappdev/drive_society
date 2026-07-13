@@ -25,7 +25,7 @@ class CreateClubView extends StatefulWidget {
 
 class _CreateClubViewState extends State<CreateClubView> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController(); 
   String privacy = 'public'; // Changed from final to non-final
   final CreateClubController createClubController =
       Get.put(CreateClubController());
@@ -45,7 +45,7 @@ class _CreateClubViewState extends State<CreateClubView> {
         scrolledUnderElevation: 0,
         title: Text(
           'Create Club',
-          style: appBarStyle,
+          style: appBarStyle, 
         ),
         centerTitle: true,
         leading: Padding(
@@ -205,7 +205,7 @@ class _CreateClubViewState extends State<CreateClubView> {
           descriptionController.clear();
           profileImage = null;
           coverImage = null;
-          Get.back();
+          Navigator.pop(context);
         }
       } else {
         if (mounted) {

@@ -10,6 +10,7 @@ import 'package:dirve_society/app/modules/profile/views/privacy_and_security_vie
 import 'package:dirve_society/app/modules/profile/views/saved_view.dart';
 import 'package:dirve_society/app/modules/profile/views/terms_and_conditions_view.dart';
 import 'package:dirve_society/common/widgets/custom_dialoge.dart';
+import 'package:dirve_society/common/widgets/profile_header_layout.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,105 +45,32 @@ class _ProfileViewState extends State<ProfileView> {
       backgroundColor: AppColors.mainColor,
       body: Column(
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                child: SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: StorageUtil.getData(StorageUtil.profileCoverPhoto) !=
-                          null
-                      ? Image.network(
-                          StorageUtil.getData(StorageUtil.profileCoverPhoto)!,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(AppImages.noBanner, fit: BoxFit.fill),
+          ProfileHeaderLayout(
+            title: StorageUtil.getData(StorageUtil.profileName) ?? '',
+            coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
+            profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
+            onBack: Get.back,
+            subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.star,
+                  size: 22,
+                  color: AppColors.darkRed,
                 ),
-              ),
-              Positioned(
-                left: 20,
-                top: 40,
-                child: GestureDetector(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Container(
-                      decoration: ShapeDecoration(
-                        shape: CircleBorder(),
-                        color: AppColors.black.withOpacity(0.3),
-                      ),
-                      child: Image.asset(
-                        AppImages.back,
-                        scale: 4,
-                      )),
-                ),
-              ),
-              Positioned(
-                bottom: -25,
-                left: 20,
-                child: CircleAvatar(
-                  radius: 45,
-                  backgroundColor: AppColors.white,
-                  backgroundImage:
-                      StorageUtil.getData(StorageUtil.profilePhotoUrl) != null
-                          ? NetworkImage(
-                              StorageUtil.getData(StorageUtil.profilePhotoUrl)!)
-                          : AssetImage(AppImages.noImage),
-                ),
-              ),
-              Positioned(
-                right: 20,
-                left: Get.width * 0.32,
-                bottom: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300]?.withOpacity(0.5),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          StorageUtil.getData(StorageUtil.profileName) ?? '',
-                          style: h1.copyWith(
-                            fontSize: 20,
-                            color: AppColors.darkRed,
-                          ),
-                        ),
-                        sw8,
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              size: 22,
-                              color: AppColors.darkRed,
-                            ),
-                            sw5,
-                            Text(
-                              StorageUtil.getData(StorageUtil.profileAvgRating)
-                                  .toString(),
-                              style: h3.copyWith(
-                                color: AppColors.darkRed,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                sw5,
+                Text(
+                  StorageUtil.getData(StorageUtil.profileAvgRating).toString(),
+                  style: h3.copyWith(
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          sh40,
+          sh16,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -334,20 +262,27 @@ class _ProfileViewState extends State<ProfileView> {
           noOntap: () {
             Navigator.pop(context);
           },
-          yesOntap: () {
-            StorageUtil.deleteData(StorageUtil.userAccessToken);
-            StorageUtil.deleteData(StorageUtil.profileId);
-            StorageUtil.deleteData(StorageUtil.profileName);
-            StorageUtil.deleteData(StorageUtil.profileEmail);
-            StorageUtil.deleteData(StorageUtil.profilePhotoUrl);
-            StorageUtil.deleteData(StorageUtil.profileBio);
-            StorageUtil.deleteData(StorageUtil.profileScores);
-            StorageUtil.deleteData(StorageUtil.profileStatus);
-            StorageUtil.deleteData(StorageUtil.profileDataId);
-            StorageUtil.deleteData(StorageUtil.profileCreatedAt);
-            StorageUtil.deleteData(StorageUtil.profileAvgRating);
-            StorageUtil.deleteData(StorageUtil.profileCoverPhoto);
-            StorageUtil.deleteData(StorageUtil.isPaid);
+          yesOntap: () async {
+            await Future.wait([
+              StorageUtil.deleteData(StorageUtil.userAccessToken),
+              StorageUtil.deleteData(StorageUtil.profileId),
+              StorageUtil.deleteData(StorageUtil.profileName),
+              StorageUtil.deleteData(StorageUtil.profileEmail),
+              StorageUtil.deleteData(StorageUtil.profilePhotoUrl),
+              StorageUtil.deleteData(StorageUtil.profileBio),
+              StorageUtil.deleteData(StorageUtil.profileAddress),
+              StorageUtil.deleteData(StorageUtil.profileAddressTwo),
+              StorageUtil.deleteData(StorageUtil.profilePoBox),
+              StorageUtil.deleteData(StorageUtil.profileCity),
+              StorageUtil.deleteData(StorageUtil.profilePostalCode),
+              StorageUtil.deleteData(StorageUtil.profileScores),
+              StorageUtil.deleteData(StorageUtil.profileStatus),
+              StorageUtil.deleteData(StorageUtil.profileDataId),
+              StorageUtil.deleteData(StorageUtil.profileCreatedAt),
+              StorageUtil.deleteData(StorageUtil.profileAvgRating),
+              StorageUtil.deleteData(StorageUtil.profileCoverPhoto),
+              StorageUtil.deleteData(StorageUtil.isPaid),
+            ]);
 
             Get.offAll(() => LoginView());
           },

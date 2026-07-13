@@ -18,7 +18,7 @@ class PostCard extends StatelessWidget {
   final String profileImage;
   final String clubName;
   final String userName;
-  final String contentPath;
+  final List<String> contentPaths;
   final String description;
   final String hashtags;
   final String date;
@@ -37,7 +37,7 @@ class PostCard extends StatelessWidget {
     required this.profileImage,
     required this.clubName,
     required this.userName,
-    required this.contentPath,
+    required this.contentPaths,
     required this.description,
     required this.hashtags,
     required this.date,
@@ -56,7 +56,6 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('PostCard build: likes=$likes, isLiked=$isLiked, isSaved=$isSaved');
-    final PageController pageController = PageController();
     return GestureDetector(
       onTap: onProfileTap,
       child: Container(
@@ -121,16 +120,10 @@ class PostCard extends StatelessWidget {
               ),
             ),
             // Media Content
-            contentPath.isNotEmpty
+            contentPaths.isNotEmpty
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: MediaContainer(
-                      mediaPath: contentPath,
-                      height: 280,
-                      width: MediaQuery.of(context).size.width,
-                      borderColor: Colors.white,
-                      borderRadius: 12,
-                    ),
+                    child: _PostMediaCarousel(contentPaths: contentPaths),
                   )
                 : Container(),
             // Post Actions
@@ -266,6 +259,87 @@ class PostCard extends StatelessWidget {
             const Divider(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PostMediaCarousel extends StatefulWidget {
+  const _PostMediaCarousel({required this.contentPaths});
+
+  final List<String> contentPaths;
+
+  @override
+  State<_PostMediaCarousel> createState() => _PostMediaCarouselState();
+}
+
+class _PostMediaCarouselState extends State<_PostMediaCarousel> {
+  int currentPage = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 280,
+      width: MediaQuery.of(context).size.width,
+      child: Stack(
+        children: [
+          PageView.builder(
+            itemCount: widget.contentPaths.length,
+            onPageChanged: (index) => setState(() => currentPage = index),
+            itemBuilder: (context, index) => MediaContainer(
+              mediaPath: widget.contentPaths[index],
+              height: 280,
+              width: MediaQuery.of(context).size.width,
+              borderColor: Colors.white,
+              borderRadius: 12,
+            ),
+          ),
+          if (widget.contentPaths.length > 1) ...[
+            Positioned(
+              top: 10,
+              right: 10,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${currentPage + 1}/${widget.contentPaths.length}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 10,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  widget.contentPaths.length,
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: currentPage == index ? 16 : 6,
+                    height: 6,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    decoration: BoxDecoration(
+                      color: currentPage == index
+                          ? AppColors.white
+                          : AppColors.white.withOpacity(0.55),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

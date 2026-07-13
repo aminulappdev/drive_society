@@ -30,7 +30,7 @@ class AddCarController extends GetxController {
       String condition,
       String color,
       int year,
-      List<File?>? images, // Changed to List<File?>? to match AddCarView
+      List<File>? images,
       {File? cover}) async {
     if (_inProgress.value) {
       // Prevent multiple calls while in progress
@@ -73,20 +73,18 @@ class AddCarController extends GetxController {
       request.fields['data'] = jsonEncode(jsonFields);
 
       // ✅ Add multiple images if available
-      if (images != null && images.any((file) => file != null)) {
+      if (images != null && images.isNotEmpty) {
         print('Images found: $images');
         for (var image in images) {
-          if (image != null) {
-            String imagePath = image.path;
-            String? mimeType = lookupMimeType(imagePath) ?? 'image/jpeg';
-            request.files.add(
-              await http.MultipartFile.fromPath(
-                'images', // Backend should expect this key for multiple images
-                imagePath,
-                contentType: MediaType.parse(mimeType),
-              ),
-            );
-          }
+          String imagePath = image.path;
+          String? mimeType = lookupMimeType(imagePath) ?? 'image/jpeg';
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              'images', // Backend should expect this key for multiple images
+              imagePath,
+              contentType: MediaType.parse(mimeType),
+            ),
+          );
         }
       }
 
