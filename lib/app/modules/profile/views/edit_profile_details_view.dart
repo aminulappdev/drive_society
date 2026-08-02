@@ -26,6 +26,8 @@ class EditProfileDetailsView extends StatefulWidget {
 }
 
 class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
+  static const int _bioMaxLength = 160;
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
@@ -382,10 +384,21 @@ class _EditProfileDetailsViewState extends State<EditProfileDetailsView> {
                       Text('Bio', style: h5),
                       sh5,
                       CustomTextField(
+                        height: 110,
                         onChange: (String value) {},
                         textColor: Colors.black,
                         controller: bioController,
+                        maxLines: 4,
+                        maxLength: _bioMaxLength,
+                        showCounterText: true,
                         hintTextStyle: const TextStyle(color: Colors.black),
+                        validator: (value) {
+                          final bio = value?.trim() ?? '';
+                          if (bio.length > _bioMaxLength) {
+                            return 'Bio must be within $_bioMaxLength characters';
+                          }
+                          return null;
+                        },
                       ),
                       sh20,
                       _buildAddressSection(

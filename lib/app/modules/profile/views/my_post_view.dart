@@ -1,6 +1,7 @@
 import 'package:dirve_society/app/modules/club/views/create_post_screen.dart';
 import 'package:dirve_society/app/modules/home/views/post_details_screen.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_feed_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/common/widgets/profile_header_layout.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,17 @@ class MyPostView extends StatefulWidget {
 
 class _MyPostViewState extends State<MyPostView> {
   final MyFeedController myFeedController = Get.put(MyFeedController());
+  final ProfileController profileController = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myFeedController.getMyFeed();
+      if (profileController.profileData.value == null) {
+        profileController.fetchProfileData();
+      }
     });
     super.initState();
   }
@@ -34,17 +41,22 @@ class _MyPostViewState extends State<MyPostView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileHeaderLayout(
-            title: StorageUtil.getData(StorageUtil.profileName) ?? '',
-            coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
-            profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
-            subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
-            onBack: Get.back,
-            ratingText:
-                '${StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
-            pointsText:
-                '${StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
-          ),
+          Obx(() {
+            final profile = profileController.profileData.value;
+            return ProfileHeaderLayout(
+              title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
+              coverImageUrl:
+                  profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
+              profileImageUrl:
+                  profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+              subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+              onBack: Get.back,
+              ratingText:
+                  '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
+              pointsText:
+                  '${profile?.scores ?? StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
+            );
+          }),
          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

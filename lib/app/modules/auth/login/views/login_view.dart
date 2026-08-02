@@ -29,20 +29,24 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     final RxBool isRememberMeChecked = false.obs;
+    const Color primaryTextColor = AppColors.greyDark;
+    const Color secondaryTextColor = AppColors.black100;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
-          'Login',
-          style: appBarStyle.copyWith(color: AppColors.white),
+          '',
+          style: appBarStyle.copyWith(color: primaryTextColor),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: CustomBackground(
+        backgroundImage: null,
+        backgroundColor: AppColors.white,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -54,14 +58,14 @@ class _LoginViewState extends State<LoginView> {
                   'Hi, Welcome back!',
                   style: h2.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.white,
+                    color: primaryTextColor,
                   ),
                 ),
                 sh12,
                 Text(
                   'Sign in to continue exploring the best deals',
                   style: h4.copyWith(
-                    color: AppColors.white,
+                    color: secondaryTextColor,
                   ),
                 ),
                 sh40,
@@ -71,13 +75,13 @@ class _LoginViewState extends State<LoginView> {
                     Text(
                       'Email',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     CustomTextField(
-                      hintTextStyle: TextStyle(color: Colors.white),
-                      textColor: Colors.white,
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
+                      textColor: primaryTextColor,
                       hintText: 'Your email',
                       controller: emailController,
                       onChange: (value) {
@@ -88,14 +92,14 @@ class _LoginViewState extends State<LoginView> {
                     Text(
                       'Password',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     CustomTextField(
-                      hintTextStyle: TextStyle(color: Colors.white),
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
                       onChange: (String value) {},
-                      textColor: Colors.white,
+                      textColor: primaryTextColor,
                       hintText: '**********',
                       isPassword: true,
                       controller: passwordController,
@@ -116,10 +120,10 @@ class _LoginViewState extends State<LoginView> {
                           child: Obx(
                             () => isRememberMeChecked.value
                                 ? Icon(Icons.check_box_outline_blank,
-                                    color: AppColors.white)
+                                    color: primaryTextColor)
                                 : Icon(
                                     Icons.check_box,
-                                    color: AppColors.white,
+                                    color: primaryTextColor,
                                   ),
                           ),
                         ),
@@ -127,7 +131,7 @@ class _LoginViewState extends State<LoginView> {
                         Text(
                           'Remember Me',
                           style: h4.copyWith(
-                            color: AppColors.white,
+                            color: secondaryTextColor,
                           ),
                         ),
                       ],
@@ -167,7 +171,7 @@ class _LoginViewState extends State<LoginView> {
                       Text(
                         'Don’t have an account? ',
                         style: h4.copyWith(
-                          color: AppColors.white,
+                          color: secondaryTextColor,
                         ),
                       ),
                       Text(

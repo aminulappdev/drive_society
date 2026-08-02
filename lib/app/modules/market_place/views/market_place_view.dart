@@ -22,6 +22,7 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
       Get.put(AllMarketplaceController());
   
   String search = '';
+  Map<String, dynamic> appliedFilters = {};
 
   @override
   void initState() {
@@ -79,8 +80,16 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
                   ),
                   sw8,
                   GestureDetector(
-                    onTap: () {
-                      Get.to(() => FilterView());
+                    onTap: () async {
+                      final result = await Get.to<Map<String, dynamic>>(
+                        () => const FilterView(),
+                      );
+                      if (result != null) {
+                        appliedFilters = result;
+                        allMarketplaceController.getAllMarketPlace(
+                          queryParamsData: result,
+                        );
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.all(12),
@@ -106,7 +115,7 @@ class _MarketPlaceViewState extends State<MarketPlaceView> {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  // Filter items based on search query
+                  // Keep local search for quick brand search on top of backend filters.
                   final filteredItems =
                       controller.allMarketPlaceList?.where((item) {
                             final brand = item.brand?.toLowerCase() ?? '';

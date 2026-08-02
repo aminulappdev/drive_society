@@ -1,6 +1,7 @@
 import 'package:dirve_society/app/modules/club/views/club_view.dart';
 import 'package:dirve_society/app/modules/home/controllers/connection_view/my_joining_club_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/app/modules/club/views/create_club_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/common/widgets/profile_header_layout.dart';
@@ -22,6 +23,9 @@ class MyClubsView extends StatefulWidget {
 
 class _MyClubsViewState extends State<MyClubsView> {
   final MyClubController myClubController = Get.put(MyClubController());
+  final ProfileController profileController = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
   final MyJoiningClubController myJoiningClubController =
       Get.put(MyJoiningClubController());
 
@@ -31,6 +35,9 @@ class _MyClubsViewState extends State<MyClubsView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myClubController.getMyClub();
       myJoiningClubController.getJoiningClub('approved');
+      if (profileController.profileData.value == null) {
+        profileController.fetchProfileData();
+      }
     });
   }
 
@@ -42,17 +49,22 @@ class _MyClubsViewState extends State<MyClubsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProfileHeaderLayout(
-              title: StorageUtil.getData(StorageUtil.profileName) ?? '',
-              coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
-              profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
-              onBack: Get.back,
-              subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
-              ratingText:
-                  '${StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
-              pointsText:
-                  '${StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
-            ),
+            Obx(() {
+              final profile = profileController.profileData.value;
+              return ProfileHeaderLayout(
+                title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
+                coverImageUrl:
+                    profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
+                profileImageUrl:
+                    profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+                onBack: Get.back,
+                subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+                ratingText:
+                    '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
+                pointsText:
+                    '${profile?.scores ?? StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
+              );
+            }),
            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

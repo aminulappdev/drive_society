@@ -5,6 +5,7 @@ import 'package:dirve_society/app/modules/profile/controllers/my_garage_controll
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -25,16 +26,38 @@ class AddCarView extends StatefulWidget {
 }
 
 class _AddCarViewState extends State<AddCarView> {
+  static const int _maxCarImages = 6;
+  static const List<String> _bodyTypes = [
+    'SUV',
+    'Saloon',
+    'Hatchback',
+    'Estate',
+    'Coupe',
+    'Convertible',
+    'MPV',
+    'Pickup',
+    'Van',
+  ];
+
   final TextEditingController brandController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
-  final TextEditingController fuelTypeController = TextEditingController(text: 'Gasoline');
+  final TextEditingController derivativeController = TextEditingController();
+  final TextEditingController fuelTypeController =
+      TextEditingController(text: 'Hybrid');
   final TextEditingController mileageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
-  final TextEditingController transmissionController = TextEditingController(text: 'Manual');
+  final TextEditingController transmissionController =
+      TextEditingController(text: 'Automatic');
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController conditionController = TextEditingController(text: 'New');
+  final TextEditingController conditionController =
+      TextEditingController(text: 'Used');
   final TextEditingController colorController = TextEditingController();
   final TextEditingController yearController = TextEditingController();
+  final TextEditingController bodyTypeController = TextEditingController();
+  final TextEditingController doorsController = TextEditingController();
+  final TextEditingController postcodeController = TextEditingController();
+  final TextEditingController sellerTypeController =
+      TextEditingController(text: 'Private');
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final AddCarController addCarController = Get.put(AddCarController());
@@ -46,6 +69,44 @@ class _AddCarViewState extends State<AddCarView> {
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
   final ImagePicker _carImagePicker = ImagePicker();
 
+  InputDecoration _dropdownDecoration() {
+    return InputDecoration(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    );
+  }
+
+  @override
+  void dispose() {
+    brandController.dispose();
+    modelController.dispose();
+    derivativeController.dispose();
+    fuelTypeController.dispose();
+    mileageController.dispose();
+    priceController.dispose();
+    transmissionController.dispose();
+    descriptionController.dispose();
+    conditionController.dispose();
+    colorController.dispose();
+    yearController.dispose();
+    bodyTypeController.dispose();
+    doorsController.dispose();
+    postcodeController.dispose();
+    sellerTypeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold( 
@@ -54,7 +115,7 @@ class _AddCarViewState extends State<AddCarView> {
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
         title: Text(
-          'Add Car',
+          'Add Car', 
           style: appBarStyle,
         ),
         centerTitle: true,
@@ -120,6 +181,17 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh16,
                 Text(
+                  'Derivative',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  onChange: (String value) {},
+                  hintText: 'Enter trim or derivative (optional)',
+                  controller: derivativeController,
+                ),
+                sh16,
+                Text(
                   'Mileage (Miles)',
                   style: h5,
                 ),
@@ -147,26 +219,11 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                  ),
+                  decoration: _dropdownDecoration(),
                   value: fuelTypeController.text.isEmpty
-                      ? 'Gasoline'
+                      ? 'Hybrid'
                       : fuelTypeController.text,
-                  items: ['Gasoline', 'Diesel']
+                  items: ['Petrol', 'Diesel', 'Hybrid', 'Electric']
                       .map((String value) => DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -191,24 +248,9 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                  ),
+                  decoration: _dropdownDecoration(),
                   value: transmissionController.text.isEmpty
-                      ? 'Manual'
+                      ? 'Automatic'
                       : transmissionController.text,
                   items: ['Manual', 'Automatic']
                       .map((String value) => DropdownMenuItem<String>(
@@ -261,6 +303,7 @@ class _AddCarViewState extends State<AddCarView> {
                   hintText: 'Enter year (e.g., 2020)',
                   controller: yearController,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Year is required';
@@ -279,24 +322,9 @@ class _AddCarViewState extends State<AddCarView> {
                 ),
                 sh8,
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                  ),
+                  decoration: _dropdownDecoration(),
                   value: conditionController.text.isEmpty
-                      ? 'New'
+                      ? 'Used'
                       : conditionController.text,
                   items: ['New', 'Used']
                       .map((String value) => DropdownMenuItem<String>(
@@ -314,6 +342,85 @@ class _AddCarViewState extends State<AddCarView> {
                       return 'Condition is required';
                     }
                     return null;
+                  },
+                ),
+                sh16,
+                Text(
+                  'Body Type',
+                  style: h5,
+                ),
+                sh8,
+                DropdownButtonFormField<String>(
+                  decoration: _dropdownDecoration(),
+                  value: bodyTypeController.text.isEmpty
+                      ? null
+                      : bodyTypeController.text,
+                  hint: const Text('Select body type'),
+                  items: _bodyTypes
+                      .map((String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (newValue) {
+                    bodyTypeController.text = newValue ?? '';
+                  },
+                ),
+                sh16,
+                Text(
+                  'Doors',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  onChange: (String value) {},
+                  hintText: 'Enter number of doors (optional)',
+                  controller: doorsController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return null;
+                    }
+                    final doors = int.tryParse(value.trim());
+                    if (doors == null || doors <= 0) {
+                      return 'Enter a valid door count';
+                    }
+                    return null;
+                  },
+                ),
+                sh16,
+                Text(
+                  'Postcode',
+                  style: h5,
+                ),
+                sh8,
+                CustomTextField(
+                  onChange: (String value) {},
+                  hintText: 'Enter postcode (optional)',
+                  controller: postcodeController,
+                ),
+                sh16,
+                Text(
+                  'Seller Type',
+                  style: h5,
+                ),
+                sh8,
+                DropdownButtonFormField<String>(
+                  decoration: _dropdownDecoration(),
+                  value: sellerTypeController.text.isEmpty
+                      ? 'Private'
+                      : sellerTypeController.text,
+                  items: ['Private', 'Trade']
+                      .map((String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      sellerTypeController.text = newValue;
+                    }
                   },
                 ),
                 sh16,
@@ -470,6 +577,11 @@ class _AddCarViewState extends State<AddCarView> {
       colorController.text.trim(),
       year,
       carImages,
+      derivative: derivativeController.text.trim(),
+      bodyType: bodyTypeController.text.trim(),
+      doors: int.tryParse(doorsController.text.trim()),
+      postcode: postcodeController.text.trim(),
+      sellerType: sellerTypeController.text.trim(),
       cover: bannerImage,
     );
 
@@ -481,14 +593,19 @@ class _AddCarViewState extends State<AddCarView> {
         // Clear all form data
         brandController.clear();
         modelController.clear();
+        derivativeController.clear();
         mileageController.clear();
         priceController.clear();
         descriptionController.clear();
         colorController.clear();
         yearController.clear();
-        fuelTypeController.text = 'Gasoline'; // Reset to default
-        transmissionController.text = 'Manual'; // Reset to default
-        conditionController.text = 'New'; // Reset to default
+        bodyTypeController.clear();
+        doorsController.clear();
+        postcodeController.clear();
+        fuelTypeController.text = 'Hybrid';
+        transmissionController.text = 'Automatic';
+        conditionController.text = 'Used';
+        sellerTypeController.text = 'Private';
         setState(() {
           bannerImage = null;
           carImages.clear();
@@ -530,7 +647,7 @@ class _AddCarViewState extends State<AddCarView> {
               Image.asset(AppImages.upload, width: 40, height: 40),
               sh8,
               Text(
-                'Upload up to 3 photos',
+                'Upload up to 6 photos',
                 style: h5.copyWith(color: Colors.grey),
               ),
             ],
@@ -539,7 +656,7 @@ class _AddCarViewState extends State<AddCarView> {
       );
     }
 
-    final showAddButton = carImages.length < 3;
+    final showAddButton = carImages.length < _maxCarImages;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -598,7 +715,7 @@ class _AddCarViewState extends State<AddCarView> {
       final existingPaths = carImages.map((image) => image.path).toSet();
       final newImages = pickedImages
           .where((image) => !existingPaths.contains(image.path))
-          .take(3 - carImages.length)
+          .take(_maxCarImages - carImages.length)
           .map((image) => File(image.path));
 
       setState(() => carImages.addAll(newImages));

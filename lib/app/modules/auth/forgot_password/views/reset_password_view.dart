@@ -26,15 +26,17 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryTextColor = AppColors.greyDark;
+    const Color secondaryTextColor = AppColors.black100;
     return Scaffold(
-      backgroundColor: AppColors.transparent,
+      backgroundColor: AppColors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
           'Forgot Password',
           style: TextStyle(
-            color: AppColors.white,
+            color: primaryTextColor,
             fontWeight: FontWeight.w700,
             fontSize: 20,
           ),
@@ -48,12 +50,15 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
             padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               AppImages.back,
-              scale: 4,
+              scale: 5,
+              color: primaryTextColor,
             ),
           ),
         ),
       ),
       body: CustomBackground(
+        backgroundImage: null,
+        backgroundColor: AppColors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -64,7 +69,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 alignment: Alignment.center,
                 child: Text(
                   'Set Your New Password',
-                  style: h4.copyWith(color: AppColors.white),
+                  style: h4.copyWith(color: primaryTextColor),
                 ),
               ),
               sh16,
@@ -72,18 +77,18 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 alignment: Alignment.center,
                 child: Text(
                   'Create a new password to secure your account.',
-                  style: h5.copyWith(color: AppColors.white),
+                  style: h5.copyWith(color: secondaryTextColor),
                 ),
               ),
               sh16,
               Text(
                 'Enter new password',
-                style: h4.copyWith(color: AppColors.white),
+                style: h4.copyWith(color: primaryTextColor),
               ),
               sh12,
               CustomTextField(
-                hintTextStyle: const TextStyle(color: Colors.white),
-                textColor: Colors.white,
+                hintTextStyle: const TextStyle(color: AppColors.gray),
+                textColor: primaryTextColor,
                 controller: passwordController,
                 onChange: (String value) {}, // Note: Corrected to onChange
                 hintText: '**********',
@@ -92,12 +97,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               sh16,
               Text(
                 'Confirm Password',
-                style: h4.copyWith(color: AppColors.white),
+                style: h4.copyWith(color: primaryTextColor),
               ),
               sh12,
               CustomTextField(
-                hintTextStyle: const TextStyle(color: Colors.white),
-                textColor: Colors.white,
+                hintTextStyle: const TextStyle(color: AppColors.gray),
+                textColor: primaryTextColor,
                 controller: confirmPasswordController,
                 onChange: (String value) {}, // Note: Corrected to onChange
                 hintText: '**********',

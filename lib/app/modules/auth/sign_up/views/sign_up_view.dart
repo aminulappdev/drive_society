@@ -26,8 +26,6 @@ class SignUpView extends StatefulWidget {
 class _SignUpViewState extends State<SignUpView> {
   final SignUpController signUpController = Get.put(SignUpController());
   bool isCheck = false;
-  
-  // Move controllers to the state class level
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -85,14 +83,17 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryTextColor = AppColors.greyDark;
+    const Color secondaryTextColor = AppColors.black100;
+
     return Scaffold(
-      backgroundColor: AppColors.transparent,
+      backgroundColor: AppColors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
-          'Signup',
-          style: appBarStyle.copyWith(color: AppColors.white),
+          '',
+          style: appBarStyle.copyWith(color: primaryTextColor),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -103,12 +104,15 @@ class _SignUpViewState extends State<SignUpView> {
             padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               AppImages.back,
-              scale: 4,
+              scale: 5,
+              color: primaryTextColor,
             ),
           ),
         ),
       ),
       body: CustomBackground(
+        backgroundImage: null,
+        backgroundColor: AppColors.white,
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: SingleChildScrollView(
@@ -120,14 +124,14 @@ class _SignUpViewState extends State<SignUpView> {
                   'Create New Account',
                   style: h2.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.white,
+                    color: primaryTextColor,
                   ),
                 ),
                 sh12,
                 Text(
                   'Please fill your detail information.',
                   style: h4.copyWith(
-                    color: AppColors.white,
+                    color: secondaryTextColor,
                   ),
                 ),
                 sh16,
@@ -137,13 +141,13 @@ class _SignUpViewState extends State<SignUpView> {
                     Text(
                       'Full Name',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     CustomTextField(
-                      hintTextStyle: const TextStyle(color: Colors.white),
-                      textColor: Colors.white,
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
+                      textColor: primaryTextColor,
                       onChange: (String value) {},
                       controller: nameController,
                       hintText: 'Enter your full name',
@@ -152,30 +156,30 @@ class _SignUpViewState extends State<SignUpView> {
                     Text(
                       'Address',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     LocationAutocompleteField(
                       controller: addressController,
                       hintText: 'Your address',
-                      textColor: Colors.white,
-                      hintTextStyle: const TextStyle(color: Colors.white),
-                      borderColor: Colors.white24,
-                      suffixIconColor: Colors.white,
+                      textColor: primaryTextColor,
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
+                      borderColor: AppColors.borderColor,
+                      suffixIconColor: primaryTextColor,
                       onSelected: _applySelectedAddress,
                     ),
                     sh12,
                     Text(
                       'Email',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     CustomTextField(
-                      hintTextStyle: const TextStyle(color: Colors.white),
-                      textColor: Colors.white,
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
+                      textColor: primaryTextColor,
                       onChange: (String value) {},
                       controller: emailController,
                       hintText: 'Your email',
@@ -184,17 +188,17 @@ class _SignUpViewState extends State<SignUpView> {
                     Text(
                       'Create a Password',
                       style: h4.copyWith(
-                        color: AppColors.white,
+                        color: primaryTextColor,
                       ),
                     ),
                     sh8,
                     CustomTextField(
-                      hintTextStyle: const TextStyle(color: Colors.white),
-                      textColor: Colors.white,
+                      hintTextStyle: const TextStyle(color: AppColors.gray),
+                      textColor: primaryTextColor,
                       onChange: (String value) {},
                       controller: passwordController,
                       sufIcon: Image.asset(
-                        AppImages.eyeClose, 
+                        AppImages.eyeClose,
                         scale: 4,
                       ),
                       hintText: '**********',
@@ -218,7 +222,7 @@ class _SignUpViewState extends State<SignUpView> {
                           child: Text(
                             'I agree to the Terms & Conditions and Privacy Policy',
                             style: h4.copyWith(
-                              color: AppColors.white,
+                              color: secondaryTextColor,
                             ),
                           ),
                         ),
@@ -269,7 +273,7 @@ class _SignUpViewState extends State<SignUpView> {
                       Text(
                         'Already have an account? ',
                         style: h4.copyWith(
-                          color: AppColors.white,
+                          color: secondaryTextColor,
                         ),
                       ),
                       Text(
@@ -313,4 +317,4 @@ class _SignUpViewState extends State<SignUpView> {
       );
     }
   }
-} 
+}

@@ -21,7 +21,7 @@ import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_text_style/styles.dart';
-
+ 
 class ClubView extends StatefulWidget {
   final bool isAuthor;
   final String authorId;

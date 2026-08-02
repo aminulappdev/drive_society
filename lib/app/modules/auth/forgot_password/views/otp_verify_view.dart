@@ -91,14 +91,17 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryTextColor = AppColors.greyDark;
+    const Color secondaryTextColor = AppColors.black100;
+
     return Scaffold(
-      backgroundColor: AppColors.transparent,
+      backgroundColor: AppColors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
           'Verify',
-          style: appBarStyle.copyWith(color: AppColors.white),
+          style: appBarStyle.copyWith(color: primaryTextColor),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -109,12 +112,15 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
             padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               AppImages.back,
-              scale: 4,
+              scale: 5,
+              color: primaryTextColor,
             ),
           ),
         ),
       ),
       body: CustomBackground(
+        backgroundImage: null,
+        backgroundColor: AppColors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
@@ -124,7 +130,7 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                 sh100,
                 Text(
                   'Code has been sent to ${widget.email}',
-                  style: h5.copyWith(color: AppColors.white),
+                  style: h5.copyWith(color: secondaryTextColor),
                   textAlign: TextAlign.center,
                 ),
                 sh30,
@@ -139,7 +145,7 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                     borderRadius: BorderRadius.circular(8),
                     fieldHeight: 45,
                     fieldWidth: 45,
-                    activeColor: AppColors.white,
+                    activeColor: AppColors.borderColor,
                     activeFillColor: AppColors.white,
                     inactiveColor: AppColors.borderColor,
                     inactiveFillColor: AppColors.white,
@@ -147,8 +153,9 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                     selectedFillColor: AppColors.white,
                   ),
                   animationDuration: const Duration(milliseconds: 300),
-                  backgroundColor: AppColors.transparent,
+                  backgroundColor: AppColors.white,
                   cursorColor: AppColors.blue,
+                  textStyle: h4.copyWith(color: primaryTextColor),
                   enablePinAutofill: true,
                   enableActiveFill: true,
                   onCompleted: (v) {},
@@ -182,7 +189,7 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                         children: [
                           TextSpan(
                             text: 'Resend code in ',
-                            style: h5.copyWith(color: AppColors.white),
+                            style: h5.copyWith(color: secondaryTextColor),
                           ),
                           TextSpan(
                             text: '${remainingTime.value}',
@@ -190,7 +197,7 @@ class _OtpVerifyViewState extends State<OtpVerifyView> {
                           ),
                           TextSpan(
                             text: 's',
-                            style: h5.copyWith(color: AppColors.white),
+                            style: h5.copyWith(color: secondaryTextColor),
                           ),
                         ],
                       ),

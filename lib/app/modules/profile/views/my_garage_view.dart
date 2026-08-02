@@ -1,6 +1,7 @@
 import 'package:dirve_society/app/modules/home/views/date_formatter.dart';
 import 'package:dirve_society/app/modules/market_place/controllers/sell_taggle_controller.dart';
 import 'package:dirve_society/app/modules/profile/controllers/my_garage_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/add_car_view.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
@@ -25,11 +26,17 @@ class MyGarageView extends StatefulWidget {
 
 class _MyGarageViewState extends State<MyGarageView> {
   final MyGarageController myGarageController = Get.put(MyGarageController());
+  final ProfileController profileController = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
   final SellTaggleController sellTaggleController = SellTaggleController();
 
   @override
   void initState() {
     myGarageController.getMyGarage();
+    if (profileController.profileData.value == null) {
+      profileController.fetchProfileData();
+    }
     super.initState();
   }
 
@@ -40,17 +47,22 @@ class _MyGarageViewState extends State<MyGarageView> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProfileHeaderLayout(
-            title: StorageUtil.getData(StorageUtil.profileName) ?? '',
-            coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
-            profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
-            subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
-            onBack: Get.back,
-            ratingText:
-                '${StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
-            pointsText:
-                '${StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
-          ),
+          Obx(() {
+            final profile = profileController.profileData.value;
+            return ProfileHeaderLayout(
+              title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
+              coverImageUrl:
+                  profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
+              profileImageUrl:
+                  profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+              subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+              onBack: Get.back,
+              ratingText:
+                  '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
+              pointsText:
+                  '${profile?.scores ?? StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
+            );
+          }),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(

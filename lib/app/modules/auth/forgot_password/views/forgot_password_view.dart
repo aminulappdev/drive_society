@@ -26,14 +26,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryTextColor = AppColors.greyDark;
+    const Color secondaryTextColor = AppColors.black100;
     return Scaffold(
-      backgroundColor: AppColors.transparent,
+      backgroundColor: AppColors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         title: Text(
           'Forgot Password',
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: primaryTextColor),
         ),
         centerTitle: true,
         leading: GestureDetector(
@@ -44,12 +46,15 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             padding: const EdgeInsets.only(left: 16),
             child: Image.asset(
               AppImages.back,
-              scale: 4,
+              scale: 5,
+              color: primaryTextColor,
             ),
           ),
         ),
       ),
       body: CustomBackground(
+        backgroundImage: null,
+        backgroundColor: AppColors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -58,12 +63,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               sh100,
               Text(
                 'No worries!',
-                style: h3.copyWith(color: AppColors.white),
+                style: h3.copyWith(color: primaryTextColor),
               ),
               sh16,
               Text(
                 'Enter your registered email address and we’ll send you instructions to reset your password. Let’s get you back on track quickly and securely!',
-                style: h5.copyWith(color: AppColors.white),
+                style: h5.copyWith(color: secondaryTextColor),
                 textAlign: TextAlign.center,
               ),
               sh30,
@@ -71,20 +76,21 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Email address',
-                  style: h4.copyWith(color: AppColors.white),
+                  style: h4.copyWith(color: primaryTextColor),
                 ),
               ),
               sh8,
               Form( 
                 key: _formKey,
                 child: CustomTextField(
-                  hintTextStyle: const TextStyle(color: Colors.white),
-                  textColor: Colors.white,
+                  hintTextStyle: const TextStyle(color: AppColors.gray),
+                  textColor: primaryTextColor,
                   controller: _emailController,
                   hintText: 'Enter your email',
                   preIcon: Image.asset(
                     AppImages.message,
                     scale: 4,
+                    color: primaryTextColor,
                   ),
                   onChange: (String value) {},
                 ),

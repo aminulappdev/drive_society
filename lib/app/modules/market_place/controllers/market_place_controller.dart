@@ -23,7 +23,7 @@ class AllMarketplaceController extends GetxController {
 
   int? lastPage;
 
-  Future<bool> getAllMarketPlace() async {
+  Future<bool> getAllMarketPlace({Map<String, dynamic>? queryParamsData}) async {
     if (_inProgress) {
       return false;
     }
@@ -35,7 +35,8 @@ class AllMarketplaceController extends GetxController {
 
     Map<String, dynamic> queryParams = {
       'limit': 99999,
-    }; 
+      ...?queryParamsData,
+    };
     final NetworkResponse response = await networkCaller.getRequest(
       Urls.allmarketPlaceUrl,
       queryParams: queryParams,

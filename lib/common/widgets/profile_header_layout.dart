@@ -3,6 +3,8 @@ import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
 
+import 'image_preview_dialog.dart';
+
 class ProfileHeaderLayout extends StatelessWidget {
   const ProfileHeaderLayout({
     super.key,
@@ -32,6 +34,24 @@ class ProfileHeaderLayout extends StatelessWidget {
     return NetworkImage(url);
   }
 
+  void _showPreview(
+    BuildContext context, {
+    required String? imageUrl,
+    required String fallbackAsset,
+  }) {
+    if (imageUrl == null || imageUrl.trim().isEmpty) {
+      return;
+    }
+    ImagePreviewDialog.showNetwork(
+      context,
+      imageUrl: imageUrl,
+      fallback: Image.asset(
+        fallbackAsset,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -45,13 +65,20 @@ class ProfileHeaderLayout extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Container(
-            width: double.infinity,
-            height: coverHeight,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: _imageProvider(coverImageUrl, AppImages.noBanner),
-                fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () => _showPreview(
+              context,
+              imageUrl: coverImageUrl,
+              fallbackAsset: AppImages.noBanner,
+            ),
+            child: Container(
+              width: double.infinity,
+              height: coverHeight,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: _imageProvider(coverImageUrl, AppImages.noBanner),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -83,27 +110,34 @@ class ProfileHeaderLayout extends StatelessWidget {
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Container(
-                            width: avatarSize,
-                            height: avatarSize,
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.white,
-                              border: Border.all(color: AppColors.white),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.black.withOpacity(0.2),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
+                          GestureDetector(
+                            onTap: () => _showPreview(
+                              context,
+                              imageUrl: profileImageUrl,
+                              fallbackAsset: AppImages.noImage,
                             ),
-                            child: CircleAvatar(
-                              backgroundColor: AppColors.silver,
-                              backgroundImage: _imageProvider(
-                                profileImageUrl,
-                                AppImages.noImage,
+                            child: Container(
+                              width: avatarSize,
+                              height: avatarSize,
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.white,
+                                border: Border.all(color: AppColors.white),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.black.withOpacity(0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: AppColors.silver,
+                                backgroundImage: _imageProvider(
+                                  profileImageUrl,
+                                  AppImages.noImage,
+                                ),
                               ),
                             ),
                           ),

@@ -1,9 +1,9 @@
 import 'package:dirve_society/app/modules/profile/controllers/change_password_controller.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
-import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_button.dart';
@@ -20,6 +20,8 @@ class ChangedPasswordView extends StatefulWidget {
 class _ChangedPasswordViewState extends State<ChangedPasswordView> {
   final TextEditingController oldPassworfController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmNewPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ChangePasswordController changePasswordController =
       Get.put(ChangePasswordController());
@@ -28,7 +30,7 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
-      appBar: AppBar(
+      appBar: AppBar( 
         backgroundColor: AppColors.mainColor,
         title: Text(
           'Change Password',
@@ -58,30 +60,21 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
                 onChange: (String value) {},
                 controller: oldPassworfController,
                 hintText: 'Current Password',
-                sufIcon: Image.asset(
-                  AppImages.eyeClose,
-                  scale: 4,
-                ),
+                isPassword: true,
               ),
               sh16,
               CustomTextField(
                 onChange: (String value) {},
                 controller: newPasswordController,
                 hintText: 'New Password',
-                sufIcon: Image.asset(
-                  AppImages.eyeClose,
-                  scale: 4,
-                ),
+                isPassword: true,
               ),
               sh16,
               CustomTextField(
                 onChange: (String value) {},
-                controller: newPasswordController,
+                controller: confirmNewPasswordController,
                 hintText: 'Confirm New Password',
-                sufIcon: Image.asset(
-                  AppImages.eyeClose,
-                  scale: 4,
-                ),
+                isPassword: true,
               ),
               sh16,
               // GestureDetector(
@@ -124,5 +117,13 @@ class _ChangedPasswordViewState extends State<ChangedPasswordView> {
         true,
       );
     }
+  }
+
+  @override
+  void dispose() {
+    oldPassworfController.dispose();
+    newPasswordController.dispose();
+    confirmNewPasswordController.dispose();
+    super.dispose();
   }
 }

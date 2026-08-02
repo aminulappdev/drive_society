@@ -18,6 +18,7 @@ class CustomTextField extends StatefulWidget {
   final Color? textColor;
   final int? maxLines;
   final int? maxLength;
+  final bool showCounterText;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidateMode;
@@ -39,6 +40,7 @@ class CustomTextField extends StatefulWidget {
     this.textColor,
     this.maxLines = 1,
     this.maxLength,
+    this.showCounterText = false,
     this.keyboardType,
     this.validator,
     this.autovalidateMode,
@@ -60,8 +62,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final bool hasVisibleCounter = widget.showCounterText && widget.maxLength != null;
+
     return Container(
-      height: widget.height,
+      height: hasVisibleCounter ? null : widget.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius),
         border: Border.all(color: widget.borderColor ?? AppColors.borderColor),
@@ -85,6 +89,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           hintText: widget.hintText ?? '',
           hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          alignLabelWithHint: widget.maxLines != null && widget.maxLines! > 1,
           prefixIcon: widget.preIcon,
           suffixIcon: widget.isPassword
               ? IconButton(
@@ -101,7 +106,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : widget.sufIcon,
           border: InputBorder.none,
           errorStyle: TextStyle(color: AppColors.red),
-          counterText: '',
+          counterStyle: h6.copyWith(color: AppColors.grey),
+          counterText: widget.showCounterText ? null : '',
         ),
       ),
     );

@@ -31,7 +31,12 @@ class AddCarController extends GetxController {
       String color,
       int year,
       List<File>? images,
-      {File? cover}) async {
+      {String? derivative,
+      String? bodyType,
+      int? doors,
+      String? postcode,
+      String? sellerType,
+      File? cover}) async {
     if (_inProgress.value) {
       // Prevent multiple calls while in progress
       return false;
@@ -69,6 +74,22 @@ class AddCarController extends GetxController {
         "color": color,
         "year": year
       };
+
+      if (derivative != null && derivative.trim().isNotEmpty) {
+        jsonFields["derivative"] = derivative.trim();
+      }
+      if (bodyType != null && bodyType.trim().isNotEmpty) {
+        jsonFields["bodyType"] = bodyType.trim();
+      }
+      if (doors != null && doors > 0) {
+        jsonFields["doors"] = doors;
+      }
+      if (postcode != null && postcode.trim().isNotEmpty) {
+        jsonFields["postcode"] = postcode.trim();
+      }
+      if (sellerType != null && sellerType.trim().isNotEmpty) {
+        jsonFields["sellerType"] = sellerType.trim();
+      }
 
       request.fields['data'] = jsonEncode(jsonFields);
 

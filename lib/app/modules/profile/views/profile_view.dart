@@ -1,5 +1,6 @@
 import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
 import 'package:dirve_society/app/modules/profile/controllers/content_controller.dart';
+import 'package:dirve_society/app/modules/profile/controllers/profile_controller.dart';
 import 'package:dirve_society/app/modules/profile/views/changed_password_view.dart';
 import 'package:dirve_society/app/modules/profile/views/edit_profile_details_view.dart';
 import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
@@ -30,10 +31,16 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final ContentController _contentController = Get.put(ContentController());
+  final ProfileController _profileController = Get.isRegistered<ProfileController>()
+      ? Get.find<ProfileController>()
+      : Get.put(ProfileController());
 
   @override
   void initState() {
     _contentController.getMyContent();
+    if (_profileController.profileData.value == null) {
+      _profileController.fetchProfileData();
+    }
     super.initState();
   }
 
@@ -43,17 +50,22 @@ class _ProfileViewState extends State<ProfileView> {
       backgroundColor: AppColors.mainColor,
       body: Column(
         children: [
-          ProfileHeaderLayout(
-            title: StorageUtil.getData(StorageUtil.profileName) ?? '',
-            coverImageUrl: StorageUtil.getData(StorageUtil.profileCoverPhoto),
-            profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
-            onBack: Get.back,
-            subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
-            ratingText:
-                '${StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
-            pointsText:
-                '${StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
-          ),
+          Obx(() {
+            final profile = _profileController.profileData.value;
+            return ProfileHeaderLayout(
+              title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
+              coverImageUrl:
+                  profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
+              profileImageUrl:
+                  profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+              onBack: Get.back,
+              subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+              ratingText:
+                  '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
+              pointsText:
+                  '${profile?.scores ?? StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
+            );
+          }),
           sh16,
           GetBuilder<ContentController>(builder: (controller) {
             return Expanded(

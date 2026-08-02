@@ -5,11 +5,13 @@ import '../app_images/app_images.dart';
 class CustomBackground extends StatelessWidget {
   final Widget child;
   final String? backgroundImage;
+  final Color backgroundColor;
 
   const CustomBackground({
     super.key,
     required this.child,
     this.backgroundImage = AppImages.backgroundImage,
+    this.backgroundColor = Colors.transparent,
   });
 
   @override
@@ -18,11 +20,14 @@ class CustomBackground extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(backgroundImage ?? AppImages.backgroundImage),
-          fit: BoxFit.cover,
-          opacity: 0.3,
-        ),
+        color: backgroundColor,
+        image: backgroundImage == null
+            ? null
+            : DecorationImage(
+                image: AssetImage(backgroundImage!),
+                fit: BoxFit.cover,
+                opacity: 0.3,
+              ),
       ),
       child: child,
     );
