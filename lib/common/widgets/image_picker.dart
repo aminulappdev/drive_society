@@ -2,25 +2,72 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerHelper {
+  final ImagePicker _imagePicker = ImagePicker();
+
+  Future<File?> _cropImage(
+    String sourcePath, {
+    double? aspectRatioX,
+    double? aspectRatioY,
+  }) async {
+    if (aspectRatioX == null || aspectRatioY == null) {
+      return File(sourcePath);
+    }
+
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: sourcePath,
+      aspectRatio: CropAspectRatio(ratioX: aspectRatioX, ratioY: aspectRatioY),
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Crop Image',
+          lockAspectRatio: true,
+          hideBottomControls: false,
+        ),
+        IOSUiSettings(
+          title: 'Crop Image',
+          aspectRatioLockEnabled: true,
+          resetAspectRatioEnabled: false,
+        ),
+      ],
+    );
+
+    if (croppedFile == null) {
+      return null;
+    }
+
+    return File(croppedFile.path);
+  }
+
   // Function to pick an image from the camera
   Future<void> pickImageFromCamera(
     BuildContext context,
     Function(File) onImagePicked,
+    {
+    double? aspectRatioX,
+    double? aspectRatioY,
+    }
   ) async {
     try {
-      final pickedImage = await ImagePicker().pickImage(
+      final pickedImage = await _imagePicker.pickImage(
         source: ImageSource.camera,
+        imageQuality: 90,
       );
       if (pickedImage != null) {
-        onImagePicked(File(pickedImage.path));
+        final croppedImage = await _cropImage(
+          pickedImage.path,
+          aspectRatioX: aspectRatioX,
+          aspectRatioY: aspectRatioY,
+        );
+
+        if (croppedImage != null) {
+          onImagePicked(croppedImage);
+        }
       }
     } catch (e) {
       debugPrint("Error picking image: $e");
-    } finally {
-      if (Navigator.canPop(context)) Navigator.pop(context);
     }
   }
 
@@ -28,18 +75,59 @@ class ImagePickerHelper {
   Future<void> pickImageFromGallery(
     BuildContext context,
     Function(File) onImagePicked,
+    {
+    double? aspectRatioX,
+    double? aspectRatioY,
+    }
   ) async {
     try {
-      final pickedImage = await ImagePicker().pickImage(
+      final pickedImage = await _imagePicker.pickImage(
         source: ImageSource.gallery,
+        imageQuality: 90,
       );
       if (pickedImage != null) {
-        onImagePicked(File(pickedImage.path));
+        final croppedImage = await _cropImage(
+          pickedImage.path,
+          aspectRatioX: aspectRatioX,
+          aspectRatioY: aspectRatioY,
+        );
+
+        if (croppedImage != null) {
+          onImagePicked(croppedImage);
+        }
       }
     } catch (e) {
       debugPrint("Error picking image: $e");
-    } finally {
-      if (Navigator.canPop(context)) Navigator.pop(context); // Close the dialog
+    }
+  }
+
+  Future<List<File>> pickMultiImageFromGallery({
+    double? aspectRatioX,
+    double? aspectRatioY,
+  }) async {
+    try {
+      final pickedImages = await _imagePicker.pickMultiImage(imageQuality: 90);
+      if (pickedImages.isEmpty) {
+        return [];
+      }
+
+      final List<File> croppedImages = [];
+      for (final image in pickedImages) {
+        final croppedImage = await _cropImage(
+          image.path,
+          aspectRatioX: aspectRatioX,
+          aspectRatioY: aspectRatioY,
+        );
+
+        if (croppedImage != null) {
+          croppedImages.add(croppedImage);
+        }
+      }
+
+      return croppedImages;
+    } catch (e) {
+      debugPrint("Error picking multiple images: $e");
+      return [];
     }
   }
 
@@ -47,10 +135,15 @@ class ImagePickerHelper {
   Future<void> showAlertDialog(
     BuildContext context,
     Function(File) onImagePicked,
+    {
+    double? aspectRatioX,
+    double? aspectRatioY,
+    }
   ) {
+    final parentContext = context;
     return showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -64,7 +157,15 @@ class ImagePickerHelper {
                 children: [
                   InkWell(
                     onTap: () {
-                      pickImageFromCamera(context, onImagePicked);
+                      if (Navigator.canPop(dialogContext)) {
+                        Navigator.pop(dialogContext);
+                      }
+                      pickImageFromCamera(
+                        parentContext,
+                        onImagePicked,
+                        aspectRatioX: aspectRatioX,
+                        aspectRatioY: aspectRatioY,
+                      );
                     },
                     child: Row(
                       children: [
@@ -85,7 +186,15 @@ class ImagePickerHelper {
                   SizedBox(height: 12),
                   InkWell(
                     onTap: () {
-                      pickImageFromGallery(context, onImagePicked);
+                      if (Navigator.canPop(dialogContext)) {
+                        Navigator.pop(dialogContext);
+                      }
+                      pickImageFromGallery(
+                        parentContext,
+                        onImagePicked,
+                        aspectRatioX: aspectRatioX,
+                        aspectRatioY: aspectRatioY,
+                      );
                     },
                     child: Row(
                       children: [
@@ -112,7 +221,9 @@ class ImagePickerHelper {
                   SizedBox(height: 12),
                   InkWell(
                     onTap: () {
-                      if (Navigator.canPop(context)) Navigator.pop(context);
+                      if (Navigator.canPop(dialogContext)) {
+                        Navigator.pop(dialogContext);
+                      }
                     },
                     child: Center(
                       child: Text(

@@ -29,11 +29,14 @@ class ProfileData {
         required this.email,
         required this.photoUrl,
         required this.bio,
+        required this.addressLine1,
+        required this.addressLine2,
         required this.address,
         required this.addressTwo,
         required this.poBox,
         required this.city,
         required this.postalCode,
+        required this.country,
         required this.scores,
         required this.status,
         required this.dataId,
@@ -48,11 +51,14 @@ class ProfileData {
     final String? email;
     final String? photoUrl;
     final String? bio;
+    final ProfileAddressLine? addressLine1;
+    final ProfileAddressLine? addressLine2;
     final String? address;
     final String? addressTwo;
     final String? poBox;
     final String? city;
     final int? postalCode;
+    final String? country;
     final dynamic scores;
     final String? status;
     final String? dataId;
@@ -62,19 +68,28 @@ class ProfileData {
     final bool? isPremiumAccount;
 
     factory ProfileData.fromJson(Map<String, dynamic> json){ 
+        final addressLine1 = json["addressLine1"] == null
+            ? null
+            : ProfileAddressLine.fromJson(json["addressLine1"]);
+        final addressLine2 = json["addressLine2"] == null
+            ? null
+            : ProfileAddressLine.fromJson(json["addressLine2"]);
         return ProfileData(
             id: json["_id"],
             name: json["name"],
             email: json["email"],
             photoUrl: json["photoUrl"],
             bio: json["bio"],
-            address: json["address"],
-            addressTwo: json["addressTwo"],
-            poBox: json["poBox"],
-            city: json["city"],
-            postalCode: json["postalCode"] is int
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            address: addressLine1?.address ?? json["address"],
+            addressTwo: addressLine2?.address ?? json["addressTwo"],
+            poBox: addressLine1?.poBox ?? json["poBox"],
+            city: addressLine1?.city ?? json["city"],
+            postalCode: addressLine1?.postalCode ?? (json["postalCode"] is int
                 ? json["postalCode"]
-                : int.tryParse(json["postalCode"]?.toString() ?? ""),
+                : int.tryParse(json["postalCode"]?.toString() ?? "")),
+            country: addressLine1?.country ?? json["country"],
             scores: json["scores"],
             status: json["status"],
             dataId: json["id"],
@@ -82,6 +97,41 @@ class ProfileData {
             avgRating: json["avgRating"],
             coverPhoto: json["coverPhoto"],
             isPremiumAccount: json["isPremiumAccount"],
+        );
+    }
+
+}
+
+class ProfileAddressLine {
+    ProfileAddressLine({
+        required this.address,
+        required this.poBox,
+        required this.city,
+        required this.postalCode,
+        required this.country,
+        required this.latitude,
+        required this.longitude,
+    });
+
+    final String? address;
+    final String? poBox;
+    final String? city;
+    final int? postalCode;
+    final String? country;
+    final double? latitude;
+    final double? longitude;
+
+    factory ProfileAddressLine.fromJson(Map<String, dynamic> json){ 
+        return ProfileAddressLine(
+            address: json["address"],
+            poBox: json["poBox"]?.toString(),
+            city: json["city"],
+            postalCode: json["postalCode"] is int
+                ? json["postalCode"]
+                : int.tryParse(json["postalCode"]?.toString() ?? ""),
+            country: json["country"],
+            latitude: (json["latitude"] as num?)?.toDouble(),
+            longitude: (json["longitude"] as num?)?.toDouble(),
         );
     }
 

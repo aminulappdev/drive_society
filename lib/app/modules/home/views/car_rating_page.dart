@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:math' as math;
+
 import 'package:dirve_society/app/modules/home/controllers/all_car_rating_controller.dart';
 import 'package:dirve_society/app/modules/home/controllers/feed/react_controller.dart';
 import 'package:dirve_society/app/modules/profile/others/views/others_profile_screen.dart';
@@ -40,11 +42,16 @@ class _CarRatingPageState extends State<CarRatingPage> {
             style: TextStyle(color: AppColors.white),
           ),
         );
-      } 
+      }
+
+      final carRatings = controller.carRatingList!;
+      final displayedCards = math.min(2, carRatings.length);
+
       return CardSwiper(
-        cardsCount: controller.carRatingList!.length,
+        cardsCount: carRatings.length,
+        numberOfCardsDisplayed: displayedCards,
         cardBuilder: (context, index, x, y) {
-          final car = controller.carRatingList![index];
+          final car = carRatings[index];
           return Card(
             elevation: 4,
             shape: RoundedRectangleBorder(
@@ -135,7 +142,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
                 Positioned(
                   bottom: 26,
                   right: 20,
-                  child: controller.carRatingList![index].isLiked ?? true
+                  child: carRatings[index].isLiked ?? true
                       ? Icon(
                           Icons.thumb_up_sharp,
                           color: Colors.blue,
@@ -154,13 +161,13 @@ class _CarRatingPageState extends State<CarRatingPage> {
         onSwipe: (previousIndex, currentIndex, direction) {
           // Ensure currentIndex is not null
           if (currentIndex != null) {
-            final car = controller.carRatingList![currentIndex];
+            final car = carRatings[currentIndex];
             if (direction == CardSwiperDirection.left) {
               // Check if id is not null before calling reactPost
               if (car.id != null) {
                 print('Swiped card $previousIndex to the LEFT, ID: ${car.id}');
                 print(
-                    'Swiped card $previousIndex to the LEFT, ID: ${controller.carRatingList![currentIndex].isLiked}');
+                    'Swiped card $previousIndex to the LEFT, ID: ${carRatings[currentIndex].isLiked}');
               } else {
                 print('Swiped card $previousIndex to the LEFT, but ID is null');
                 if (mounted) {}
@@ -168,7 +175,7 @@ class _CarRatingPageState extends State<CarRatingPage> {
             } else if (direction == CardSwiperDirection.right) {
               reactPost(car.contentMeta!.id ?? '');
               print('Swiped card $previousIndex to the RIGHT, ID: ${car.id}');
-              'Swiped card $previousIndex to the LEFT, ID: ${controller.carRatingList![currentIndex].isLiked}';
+              'Swiped card $previousIndex to the LEFT, ID: ${carRatings[currentIndex].isLiked}';
               // Add your right swipe operation here
             }
           } else {

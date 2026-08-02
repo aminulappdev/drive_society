@@ -9,15 +9,13 @@ import 'package:dirve_society/app/modules/profile/views/my_post_view.dart';
 import 'package:dirve_society/app/modules/profile/views/privacy_and_security_view.dart';
 import 'package:dirve_society/app/modules/profile/views/saved_view.dart';
 import 'package:dirve_society/app/modules/profile/views/terms_and_conditions_view.dart';
+import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/widgets/custom_dialoge.dart';
 import 'package:dirve_society/common/widgets/profile_header_layout.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:readmore/readmore.dart';
 import '../../../../common/app_color/app_colors.dart';
-import '../../../../common/app_images/app_images.dart';
-import '../../../../common/app_text_style/styles.dart';
 import '../../../../common/size_box/custom_sizebox.dart';
 import '../../../../common/widgets/custom_button.dart';
 import '../../../../common/widgets/custom_list_tile.dart';
@@ -51,75 +49,12 @@ class _ProfileViewState extends State<ProfileView> {
             profileImageUrl: StorageUtil.getData(StorageUtil.profilePhotoUrl),
             onBack: Get.back,
             subtitle: StorageUtil.getData(StorageUtil.profileBio) ?? '',
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.star,
-                  size: 22,
-                  color: AppColors.darkRed,
-                ),
-                sw5,
-                Text(
-                  StorageUtil.getData(StorageUtil.profileAvgRating).toString(),
-                  style: h3.copyWith(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
+            ratingText:
+                '${StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
+            pointsText:
+                '${StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
           ),
           sh16,
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Descriptions',
-                      style: h5.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.orange[600],
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${StorageUtil.getData(StorageUtil.profileScores)} Points',
-                          style: h6,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                sh5,
-                ReadMoreText(
-                  StorageUtil.getData(StorageUtil.profileBio) ?? '',
-                  trimLines: 2,
-                  trimMode: TrimMode.Line,
-                  trimCollapsedText: 'Show More',
-                  trimExpandedText: ' Show Less',
-                  style: h6,
-                  moreStyle: h6.copyWith(
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  lessStyle: h6.copyWith(
-                    color: AppColors.grey,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          sh20,
           GetBuilder<ContentController>(builder: (controller) {
             return Expanded(
               child: SingleChildScrollView(
@@ -159,7 +94,7 @@ class _ProfileViewState extends State<ProfileView> {
                         onTap: () {
                           Get.to(() => MyClubsView());
                         },
-                        leadingImage: AppImages.edit,
+                        leadingImage: AppImages.garage,
                         title: 'My Clubs',
                         trailingImage: AppImages.arrowRightSmall,
                       ),
@@ -168,7 +103,7 @@ class _ProfileViewState extends State<ProfileView> {
                         onTap: () {
                           Get.to(() => MyFriendScreen());
                         },
-                        leadingImage: AppImages.edit,
+                        leadingImage: AppImages.garage,
                         title: 'My Friends',
                         trailingImage: AppImages.arrowRightSmall,
                       ),

@@ -13,7 +13,8 @@ import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
 import 'package:dirve_society/app/modules/subscription/views/subscription_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
-import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/size_box/custom_sizebox.dart'; 
+import 'package:dirve_society/common/widgets/club_header_layout.dart';
 import 'package:dirve_society/common/widgets/custom_dialoge.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/get_storage.dart';
@@ -210,170 +211,79 @@ class _ClubViewState extends State<ClubView> {
               child: CircularProgressIndicator(),
             );
           }
+          final club = controller.clubDetails;
+          if (club == null) {
+            return const Center(
+              child: Text(
+                'Club details not available',
+                style: TextStyle(color: AppColors.white),
+              ),
+            );
+          }
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              Container(
-                width: double.infinity,
-                height: screenHeight * 0.25,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(controller.clubDetails!.coverPhoto ??
-                        'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Container(
-                color: AppColors.white.withOpacity(0.15),
-              ),
               Column(
                 children: [
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: Container(
-                            decoration: ShapeDecoration(
-                              shape: CircleBorder(),
-                              color: AppColors.black.withOpacity(0.3),
-                            ),
-                            child: Image.asset(
-                              AppImages.back,
-                              scale: 4,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          key: menuButtonKey, // Assign key to menu button
-                          onTap: () {
-                            // Get the position of the menu button
-                            final RenderBox renderBox =
-                                menuButtonKey.currentContext!.findRenderObject()
-                                    as RenderBox;
-                            final buttonPosition =
-                                renderBox.localToGlobal(Offset.zero);
+                  ClubHeaderLayout(
+                    title: club.name ?? '',
+                    coverImageUrl: club.coverPhoto,
+                    profileImageUrl: club.profilePhoto,
+                    membersText: '${club.member ?? 0} Members',
+                    visibilityText: club.type ?? '',
+                    onBack: Get.back,
+                    trailing: GestureDetector(
+                      key: menuButtonKey,
+                      onTap: () {
+                        final RenderBox renderBox =
+                            menuButtonKey.currentContext!.findRenderObject()
+                                as RenderBox;
+                        final buttonPosition =
+                            renderBox.localToGlobal(Offset.zero);
 
-                            if (_isMenuOpen) {
-                              _closeMenu();
-                            } else {
-                              _showMenu(context, buttonPosition);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: ShapeDecoration(
-                              shape: CircleBorder(),
-                              color: AppColors.black.withOpacity(0.3),
-                            ),
-                            child: Image.asset(
-                              AppImages.menu,
-                              scale: 4,
-                              color: AppColors.white,
-                            ),
-                          ),
+                        if (_isMenuOpen) {
+                          _closeMenu();
+                        } else {
+                          _showMenu(context, buttonPosition);
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: ShapeDecoration(
+                          shape: CircleBorder(),
+                          color: AppColors.black.withOpacity(0.3),
                         ),
-                      ],
+                        child: Image.asset(
+                          AppImages.menu,
+                          scale: 4,
+                          color: AppColors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: screenHeight * 0.08),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundColor: AppColors.white,
-                          backgroundImage: NetworkImage(controller
-                                  .clubDetails!.profilePhoto ??
-                              'https://fastly.picsum.photos/id/685/200/200.jpg?hmac=1IjDFMSIa0T_JSvcq79_e2NWPwRJg61Ufbfu4eM4HvA'),
-                        ),
-                        sw12,
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: const Color.fromARGB(155, 226, 228, 228),
+                    inviteAction: GestureDetector(
+                      onTap: () {
+                        Get.to(() => InviteScreen(
+                              authorId: widget.authorId,
+                              id: widget.id,
+                            ));
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            AppImages.invite,
+                            scale: 4,
                           ),
-                          width: 140,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  controller.clubDetails!.name ?? '',
-                                  style: h1.copyWith(
-                                      fontSize: 20, color: AppColors.darkRed),
-                                ),
-                                sh5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      AppImages.groupLight,
-                                      scale: 4,
-                                    ),
-                                    sw5,
-                                    Text(
-                                      '${controller.clubDetails!.member.toString()} Members',
-                                      style: h6,
-                                    ),
-                                  ],
-                                ),
-                                sh5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      AppImages.public,
-                                      scale: 4,
-                                    ),
-                                    sw5,
-                                    Text(controller.clubDetails!.type ?? '',
-                                        style: h6),
-                                  ],
-                                ),
-                              ],
+                          sw8,
+                          Text(
+                            'Invite',
+                            style: h5.copyWith(
+                              color: AppColors.darkRed,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => InviteScreen(
-                                  authorId: widget.authorId,
-                                  id: widget.id,
-                                ));
-                          },
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                AppImages.invite,
-                                scale: 4,
-                              ),
-                              sw8,
-                              Text(
-                                'Invite',
-                                style: h5.copyWith(
-                                  color: AppColors.darkRed,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   sh20,
@@ -475,14 +385,14 @@ class _ClubViewState extends State<ClubView> {
                 onPressed: () {
                   selectedIndex == 0
                       ? Get.to(CreatePostView(
-                          authorId: widget.authorId,
+                          authorId: widget.authorId, 
                           clubId: widget.id,
                         ))
                       : Get.to(CreateForumView(
                           authorId: widget.authorId,
                           clubId: widget.id,
                         ));
-                },
+                }, 
                 backgroundColor: AppColors.darkRed,
                 child: Icon(
                   Icons.add,

@@ -12,15 +12,17 @@ import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:dirve_society/common/size_box/custom_sizebox.dart';
+import 'package:dirve_society/common/widgets/image_preview_dialog.dart';
 
 class PostCard extends StatelessWidget {
   final String? id;
   final String profileImage;
   final String clubName;
   final String userName;
+  final String? location;
   final List<String> contentPaths;
   final String description;
-  final String hashtags;
+  final List<String> tags;
   final String date;
   final int likes;
   final int comments;
@@ -37,9 +39,10 @@ class PostCard extends StatelessWidget {
     required this.profileImage,
     required this.clubName,
     required this.userName,
+    this.location,
     required this.contentPaths,
     required this.description,
-    required this.hashtags,
+    required this.tags,
     required this.date,
     required this.likes,
     required this.comments,
@@ -80,9 +83,22 @@ class PostCard extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20.0,
-                      backgroundImage: NetworkImage(profileImage),
+                    GestureDetector(
+                      onTap: () => ImagePreviewDialog.showNetwork(
+                        context,
+                        imageUrl: profileImage,
+                        fallback: Image.asset(
+                          AppImages.noImage,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 20.0,
+                        backgroundImage: profileImage.isNotEmpty
+                            ? NetworkImage(profileImage)
+                            : const AssetImage(AppImages.noImage)
+                                as ImageProvider,
+                      ),
                     ),
                     sw8,
                     Column(
@@ -94,10 +110,10 @@ class PostCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        // Text(
-                        //   'BY $userName'.toUpperCase(),
-                        //   style: h7,
-                        // ),
+                        Text(
+                          date,
+                          style: h7,
+                        ),
                       ],
                     ),
                     // Spacer(),
@@ -204,26 +220,32 @@ class PostCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        userName,
-                        style: h6.copyWith(fontWeight: FontWeight.w600),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            style: h6,
+                            children: [
+                              TextSpan(
+                                text: userName,
+                                style: h6.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              if (location != null &&
+                                  location!.trim().isNotEmpty)
+                                TextSpan(
+                                  text: ' at ${location!.trim()}',
+                                  style: h6,
+                                ),
+                            ],
+                          ),
+                        ),
                       ),
-                      // sw8,
-                      // Expanded(
-                      //   child: Text(
-                      //     hashtags,
-                      //     style: h6.copyWith(
-                      //       fontWeight: FontWeight.w600,
-                      //       color: AppColors.red,
-                      //     ),
-                      //     maxLines: 1,
-                      //     overflow: TextOverflow.ellipsis,
-                      //   ),
-                      // )
                     ],
                   ),
                   sh5,
@@ -243,19 +265,29 @@ class PostCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (tags.isNotEmpty) ...[
+                    sh5,
+                    Text(
+                      tags.map((tag) => '#$tag').join(' '),
+                      style: h6.copyWith(
+                        color: Colors.blue.shade900,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 4,
-              ),
-              child: Text(
-                date,
-                style: h6,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(
+            //     horizontal: 20,
+            //     vertical: 4,
+            //   ),
+            //   child: Text(
+            //     date,
+            //     style: h6,
+            //   ),
+            // ),
             const Divider(),
           ],
         ),
@@ -299,8 +331,7 @@ class _PostMediaCarouselState extends State<_PostMediaCarousel> {
               top: 10,
               right: 10,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(
                   color: Colors.black54,
                   borderRadius: BorderRadius.circular(20),

@@ -89,7 +89,7 @@ class MeetsView extends StatelessWidget {
                         ),
                         markers: controller.markers.value,
                         onMapCreated: (GoogleMapController mapController) {
-                          controller.mapController = mapController;
+                          controller.onMapCreated(mapController);
                         },
                         myLocationEnabled: true,
                         myLocationButtonEnabled: true,

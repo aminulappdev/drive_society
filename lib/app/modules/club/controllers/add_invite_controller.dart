@@ -24,7 +24,7 @@ class AddInviteController extends GetxController {
     if (_inProgress.value) {
       return false;
     }
-
+ 
     bool isSuccess = false;
 
     _inProgress.value = true;

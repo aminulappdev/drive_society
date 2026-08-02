@@ -36,7 +36,7 @@ class _OthersProfileViewState extends State<OthersProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
+      backgroundColor: AppColors.mainColor, 
       body: GestureDetector(
         // Detect taps outside the menu to close it (if needed)
         onTap: () {
@@ -84,10 +84,29 @@ class _OthersProfileViewState extends State<OthersProfileView> {
                   subtitle: profile.bio,
                   coverImageUrl: profile.coverPhoto,
                   profileImageUrl: profile.photoUrl,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.star,
+                        size: 22,
+                        color: AppColors.darkRed,
+                      ),
+                      sw5,
+                      Text(
+                        profile.avgRating?.toString() ?? '0',
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
                   onBack: Get.back,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(

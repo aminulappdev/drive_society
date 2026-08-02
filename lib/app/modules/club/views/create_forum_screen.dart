@@ -12,7 +12,7 @@ import '../../../../common/widgets/custom_circular_container.dart';
 import '../../../../common/widgets/custom_textfield.dart';
 
 // ignore: must_be_immutable
-class CreateForumView extends StatefulWidget {
+class CreateForumView extends StatefulWidget { 
   String? clubId;
   String? authorId;
 
@@ -23,6 +23,7 @@ class CreateForumView extends StatefulWidget {
 }
 
 class _CreateForumViewState extends State<CreateForumView> {
+  static const int _titleMaxLength = 80;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final CreateForumController createForumController =
@@ -37,7 +38,7 @@ class _CreateForumViewState extends State<CreateForumView> {
       backgroundColor: AppColors.mainColor,
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
-        scrolledUnderElevation: 0,
+        scrolledUnderElevation: 0, 
         title: Text(
           'Create forum',
           style: appBarStyle,
@@ -72,6 +73,31 @@ class _CreateForumViewState extends State<CreateForumView> {
                   onChange: (String value) {},
                   controller: titleController,
                   hintText: 'Enter title',
+                  maxLength: _titleMaxLength,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    final title = value?.trim() ?? '';
+                    if (title.isEmpty) {
+                      return 'Title is required';
+                    }
+                    if (title.length > _titleMaxLength) {
+                      return 'Title must be $_titleMaxLength characters or fewer';
+                    }
+                    return null;
+                  },
+                ),
+                sh8,
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: titleController,
+                  builder: (context, value, child) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${value.text.characters.length}/$_titleMaxLength',
+                        style: h6.copyWith(color: AppColors.grey),
+                      ),
+                    );
+                  },
                 ),
                 sh16,
                 Text(
@@ -80,9 +106,11 @@ class _CreateForumViewState extends State<CreateForumView> {
                 ),
                 sh8,
                 CustomTextField(
+                  height: 120,
                   onChange: (String value) {},
                   controller: descriptionController,
                   hintText: 'Describe about your club',
+                  maxLines: 5,
                 ),
                 sh100,
               ],
@@ -113,7 +141,7 @@ class _CreateForumViewState extends State<CreateForumView> {
   Future<void> createForum() async {
     if (formKey.currentState!.validate()) {
       final bool isSuccess = await createForumController.createForun(
-          titleController.text,
+          titleController.text.trim(),
           descriptionController.text,
           widget.clubId ?? '');
 

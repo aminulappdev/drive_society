@@ -5,7 +5,7 @@ class AllFeedModel {
         required this.message,
         required this.meta,
         required this.data,
-    });
+    }); 
 
     final bool? success;
     final int? statusCode;
@@ -24,9 +24,10 @@ class AllFeedModel {
     }
 
 }
-
+ 
 class AllFeedItemModel {
     AllFeedItemModel({
+        required this.location,
         required this.hideBy,
         required this.id,
         required this.author,
@@ -44,10 +45,11 @@ class AllFeedItemModel {
         required this.isHide,
     });
 
+    final FeedLocation? location;
     final List<dynamic> hideBy;
     final String? id;
     final Author? author;
-    final String? club;
+    final dynamic club;
     final List<String> content;
     final String? description;
     final List<String> tags;
@@ -62,6 +64,7 @@ class AllFeedItemModel {
 
     factory AllFeedItemModel.fromJson(Map<String, dynamic> json){ 
         return AllFeedItemModel(
+            location: json["location"] == null ? null : FeedLocation.fromJson(json["location"]),
             hideBy: json["hideBy"] == null ? [] : List<dynamic>.from(json["hideBy"]!.map((x) => x)),
             id: json["_id"],
             author: json["author"] == null ? null : Author.fromJson(json["author"]),
@@ -77,6 +80,29 @@ class AllFeedItemModel {
             isVisible: json["isVisible"],
             isFavorite: json["isFavorite"],
             isHide: json["isHide"],
+        );
+    }
+
+}
+
+class FeedLocation {
+    FeedLocation({
+        required this.address,
+        required this.type,
+        required this.coordinates,
+    });
+
+    final String? address;
+    final String? type;
+    final List<num> coordinates;
+
+    factory FeedLocation.fromJson(Map<String, dynamic> json){ 
+        return FeedLocation(
+            address: json["address"],
+            type: json["type"],
+            coordinates: json["coordinates"] == null
+                ? []
+                : List<num>.from(json["coordinates"]!.map((x) => x ?? 0)),
         );
     }
 

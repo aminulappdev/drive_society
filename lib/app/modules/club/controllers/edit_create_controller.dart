@@ -10,6 +10,7 @@ import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 
 class EditClubController extends GetxController {
+  static const int maxClubNameLength = 80;
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 
@@ -20,6 +21,14 @@ class EditClubController extends GetxController {
   Future<bool> editClub(
       String id, String name, String privacy, String description, File? image,
       {File? cover}) async {
+    final normalizedName = name.trim();
+    if (normalizedName.isEmpty || normalizedName.length > maxClubNameLength) {
+      _errorMessage =
+          "Club name must be between 1 and $maxClubNameLength characters.";
+      update();
+      return false;
+    }
+
     bool isSuccess = false;
     _inProgress = true;
     update();
@@ -41,7 +50,7 @@ class EditClubController extends GetxController {
 
       // ✅ Set 'data' field with JSON-encoded string
       Map<String, dynamic> jsonFields = {
-        "name": name,
+        "name": normalizedName,
         "type": privacy,
         "description": description
       };

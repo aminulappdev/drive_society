@@ -6,7 +6,7 @@ import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
+import 'package:mime/mime.dart'; 
 import 'package:http/http.dart' as http;
 
 class CreatePostController extends GetxController {
@@ -19,9 +19,16 @@ class CreatePostController extends GetxController {
   String? get errorMessage => _errorMessage;
 
   /// 🔁 Update Profile Function
-  Future<bool> createPost(
-      String name, String privacy, String description, List<File> images,
-      {File? cover, String? clubId}) async {
+  Future<bool> createPost({
+    required String description,
+    required List<File> images,
+    String? privacy,
+    String? singleTag, 
+    List<String> tags = const [],
+    Map<String, dynamic>? location,
+    File? cover,
+    String? clubId,
+  }) async {
     if (_inProgress.value) {
       // NEW CHANGE: Added check to prevent multiple calls
       return false;
@@ -47,18 +54,25 @@ class CreatePostController extends GetxController {
       request.headers['Authorization'] = token;
 
       // ✅ Set 'data' field with JSON-encoded string
-      Map<String, dynamic> jsonFields = clubId != null
-          ? {
-              "author": StorageUtil.getData(StorageUtil.profileId),
-              "club": clubId,
-              "description": description,
-              "tags": [name]
-            }
-          : {
-              "author": StorageUtil.getData(StorageUtil.profileId),
-              "description": description,
-              "tags": [name]
-            };
+      final List<String> resolvedTags = tags.isNotEmpty
+          ? tags
+          : singleTag != null && singleTag.trim().isNotEmpty
+              ? [singleTag.trim()]
+              : [];
+
+      final Map<String, dynamic> jsonFields = {
+        "author": StorageUtil.getData(StorageUtil.profileId),
+        "description": description,
+        "tags": resolvedTags,
+      };
+
+      if (clubId != null) {
+        jsonFields["club"] = clubId;
+      }
+
+      if (location != null) {
+        jsonFields["location"] = location;
+      }
 
       request.fields['data'] = jsonEncode(jsonFields);
 

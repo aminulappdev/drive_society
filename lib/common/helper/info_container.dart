@@ -13,7 +13,7 @@ class InfoContainer extends StatelessWidget {
     super.key,
     required this.imagePath,
     required this.label,
-    required this.value,
+    required this.value, 
   });
 
   @override
@@ -37,13 +37,13 @@ class InfoContainer extends StatelessWidget {
           sh8,
           Text(
             label,
-            style: h6,
+            style: h7,
           ),
           sh5,
           Text(
             value,
             style: h1.copyWith(
-              fontSize: 20,
+              fontSize: 16,
               color: AppColors.darkRed,
             ),
           ),

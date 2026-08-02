@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:dirve_society/app/modules/auth/login/views/login_view.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:dirve_society/services/network_caller/error_message_model.dart';
 import 'package:dirve_society/services/network_caller/network_response.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 
-
 class NetworkCaller {
+  static bool _isHandlingUnauthorized = false;
   final Logger _logger = Logger();
 
   Future<NetworkResponse> getRequest(String url,
@@ -38,13 +41,16 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
-        final debugMessage = jsonDecode(response.body);
-        ErrorMessageModel errorMessageModel =
-            ErrorMessageModel.fromJson(debugMessage);
+        final errorMessageModel = _parseErrorMessageModel(response.body);
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          errorMessageModel,
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
             isSuccess: false,
             statusCode: response.statusCode,
-            errorMessage: errorMessageModel.message ?? 'Wrong');
+            errorMessage: errorMessageModel?.message ?? 'Wrong');
       }
     } catch (e) {
       _logResponse(url, -1, null, '', e.toString());
@@ -99,13 +105,17 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
-        final debugMessage = jsonDecode(response.body);
-        ErrorMessageModel errorMessageModel =
-            ErrorMessageModel.fromJson(debugMessage);
+        final errorMessageModel = _parseErrorMessageModel(response.body);
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          errorMessageModel,
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
-          errorMessage: errorMessageModel.message ?? 'Something went wrong',
+          errorMessage:
+              errorMessageModel?.message ?? 'Something went wrong',
         );
       }
     } catch (e) {
@@ -142,13 +152,16 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
-        final debugMessage = jsonDecode(response.body);
-        ErrorMessageModel errorMessageModel =
-            ErrorMessageModel.fromJson(debugMessage);
+        final errorMessageModel = _parseErrorMessageModel(response.body);
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          errorMessageModel,
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
             isSuccess: false,
             statusCode: response.statusCode,
-            errorMessage: errorMessageModel.message ?? 'Wrong');
+            errorMessage: errorMessageModel?.message ?? 'Wrong');
       }
     } catch (e) {
       _logResponse(url, -1, null, '', e.toString());
@@ -181,6 +194,11 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          _parseErrorMessageModel(response.body),
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
             isSuccess: false, statusCode: response.statusCode);
       }
@@ -221,6 +239,11 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          _parseErrorMessageModel(response.body),
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
             isSuccess: false, statusCode: response.statusCode);
       }
@@ -277,13 +300,17 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
-        final debugMessage = jsonDecode(response.body);
-        ErrorMessageModel errorMessageModel =
-            ErrorMessageModel.fromJson(debugMessage);
+        final errorMessageModel = _parseErrorMessageModel(response.body);
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          errorMessageModel,
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
-          errorMessage: errorMessageModel.message ?? 'Something went wrong',
+          errorMessage:
+              errorMessageModel?.message ?? 'Something went wrong',
         );
       }
     } catch (e) {
@@ -321,13 +348,16 @@ class NetworkCaller {
           responseData: debugMessage,
         );
       } else {
-        final debugMessage = jsonDecode(response.body);
-        ErrorMessageModel errorMessageModel =
-            ErrorMessageModel.fromJson(debugMessage);
+        final errorMessageModel = _parseErrorMessageModel(response.body);
+        _handleUnauthorizedResponse(
+          response.statusCode,
+          errorMessageModel,
+          shouldRedirect: accesToken != null,
+        );
         return NetworkResponse(
             isSuccess: false,
             statusCode: response.statusCode,
-            errorMessage: errorMessageModel.message ?? 'Wrong');
+            errorMessage: errorMessageModel?.message ?? 'Wrong');
       }
     } catch (e) {
       _logResponse(url, -1, null, '', e.toString());
@@ -350,5 +380,39 @@ class NetworkCaller {
       _logger.i(
           'URL => $url\nHeaders => $headers\nStatusCode => $statusCode \nBODY => $body');
     }
+  }
+
+  ErrorMessageModel? _parseErrorMessageModel(String body) {
+    try {
+      final debugMessage = jsonDecode(body);
+      return ErrorMessageModel.fromJson(debugMessage);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void _handleUnauthorizedResponse(
+    int statusCode,
+    ErrorMessageModel? errorMessageModel,
+    {required bool shouldRedirect}
+  ) {
+    final message = (errorMessageModel?.message ?? '').toLowerCase();
+    final isUnauthorized = statusCode == 401 ||
+        statusCode == 403 ||
+        message.contains('unauthorized access') ||
+        message.contains('forbidden');
+
+    if (!shouldRedirect || !isUnauthorized || _isHandlingUnauthorized) {
+      return;
+    }
+
+    _isHandlingUnauthorized = true;
+    Future.microtask(() async {
+      await StorageUtil.clearUserSession();
+      if (Get.currentRoute != '/login') {
+        Get.offAll(() => const LoginView());
+      }
+      _isHandlingUnauthorized = false;
+    });
   }
 }

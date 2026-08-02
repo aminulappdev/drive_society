@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 void showSnackBarMessage(BuildContext context, String msg,
-    [bool isError = false]) {
+    [bool isError = false, String? title]) {
   Get.snackbar(
-    isError ? 'Failed' : 'Success', // Title based on isError
+    title ?? (isError ? 'Failed' : 'Success'), // Title based on isError
     msg, // Message
     backgroundColor: isError
         ? const Color.fromARGB(207, 255, 82, 82)

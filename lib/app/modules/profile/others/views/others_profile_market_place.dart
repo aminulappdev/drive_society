@@ -7,7 +7,7 @@ import 'package:dirve_society/common/helper/market_place_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
+ 
 class OthersProfileMarketPlace extends StatefulWidget {
   final String? id;
   const OthersProfileMarketPlace({super.key, this.id});

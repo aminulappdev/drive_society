@@ -7,6 +7,7 @@ import 'package:dirve_society/urls.dart';
 import 'package:get/get.dart';
 
 class CreateForumController extends GetxController {
+  static const int maxTitleLength = 80;
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   var _inProgress = false.obs; // Changed to RxBool
@@ -28,6 +29,14 @@ class CreateForumController extends GetxController {
       return false;
     }
 
+    final normalizedTitle = title.trim();
+    if (normalizedTitle.isEmpty || normalizedTitle.length > maxTitleLength) {
+      _errorMessage =
+          'Title must be between 1 and $maxTitleLength characters.';
+      update();
+      return false;
+    }
+
     bool isSuccess = false;
 
     _inProgress.value = true; // Updated to use .value
@@ -36,7 +45,7 @@ class CreateForumController extends GetxController {
     Map<String, dynamic> jsonFields = {
       "author": StorageUtil.getData(StorageUtil.profileId),
       "club": clubId,
-      "title": title,
+      "title": normalizedTitle,
       "description": description,
     };
 

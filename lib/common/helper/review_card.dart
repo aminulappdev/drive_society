@@ -93,7 +93,7 @@ class ReviewCard extends StatelessWidget {
 
     return Container(
       width: Get.width * 0.85,
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.red.shade300),
         borderRadius: BorderRadius.circular(8),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:dirve_society/common/widgets/image_preview_dialog.dart';
 import '../../../../../../common/app_text_style/styles.dart';
 import '../app_color/app_colors.dart';
 
@@ -27,57 +28,25 @@ class UploadWidget extends StatelessWidget {
     this.labelStyle, void Function()? onImageTap,
   });
 
-  /// Full-screen preview with zoom & close button
-  void _showImagePreview(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black87,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            Center(
-              child: InteractiveViewer(
-                minScale: 0.5,
-                maxScale: 4.0,
-                child: imageFile != null
-                    ? Image.file(imageFile!, fit: BoxFit.contain)
-                    : Image.network(
-                        networkImage!,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.broken_image,
-                          color: Colors.white70,
-                          size: 60,
-                        ),
-                      ),
-              ),
-            ),
-            Positioned(
-              top: 40,
-              right: 20,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: const CircleAvatar(
-                  radius: 18,
-                  backgroundColor: Colors.black54,
-                  child: Icon(Icons.close, color: Colors.white, size: 24),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final bool hasImage = imageFile != null || (networkImage?.isNotEmpty ?? false);
 
     return GestureDetector(
-      onTap: hasImage ? () => _showImagePreview(context) : onTap,
+      onTap: hasImage
+          ? () {
+              if (imageFile != null) {
+                ImagePreviewDialog.showFile(context, imageFile: imageFile!);
+                return;
+              }
+              if (networkImage != null && networkImage!.isNotEmpty) {
+                ImagePreviewDialog.showNetwork(
+                  context,
+                  imageUrl: networkImage!,
+                );
+              }
+            }
+          : onTap,
       child: Container(
         height: height,
         width: width,

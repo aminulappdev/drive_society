@@ -27,8 +27,8 @@ class SignUpController extends GetxController {
   String? _otpToken;
   String? get otpToken => _otpToken;
 
-  Future<bool> createUser(
-      String name, String email, String password, String address) async {
+  Future<bool> createUser(String name, String email, String password,
+      Map<String, dynamic> addressLine1) async {
     // final token = StorageUtil.getData(StorageUtil.userAccessToken);
     // if (token == null) {
     //   // Get.off(SignInScreen());
@@ -41,7 +41,7 @@ class SignUpController extends GetxController {
       "name": name,
       "email": email,
       "password": password,
-      "adderss": address
+      "addressLine1": addressLine1,
     };
 
     final NetworkResponse response =

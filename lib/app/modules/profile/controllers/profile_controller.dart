@@ -63,6 +63,31 @@ class ProfileController extends GetxController {
         await _cacheProfileValue(StorageUtil.profileCity, profile.city);
         await _cacheProfileValue(
             StorageUtil.profilePostalCode, profile.postalCode);
+        await _cacheProfileValue(StorageUtil.profileCountry, profile.country);
+        await _cacheProfileValue(
+            StorageUtil.profileAddressOnePoBox, profile.addressLine1?.poBox);
+        await _cacheProfileValue(
+            StorageUtil.profileAddressOneCity, profile.addressLine1?.city);
+        await _cacheProfileValue(StorageUtil.profileAddressOnePostalCode,
+            profile.addressLine1?.postalCode);
+        await _cacheProfileValue(StorageUtil.profileAddressOneCountry,
+            profile.addressLine1?.country);
+        await _cacheProfileValue(StorageUtil.profileAddressOneLatitude,
+            profile.addressLine1?.latitude);
+        await _cacheProfileValue(StorageUtil.profileAddressOneLongitude,
+            profile.addressLine1?.longitude);
+        await _cacheProfileValue(
+            StorageUtil.profileAddressTwoPoBox, profile.addressLine2?.poBox);
+        await _cacheProfileValue(
+            StorageUtil.profileAddressTwoCity, profile.addressLine2?.city);
+        await _cacheProfileValue(StorageUtil.profileAddressTwoPostalCode,
+            profile.addressLine2?.postalCode);
+        await _cacheProfileValue(StorageUtil.profileAddressTwoCountry,
+            profile.addressLine2?.country);
+        await _cacheProfileValue(StorageUtil.profileAddressTwoLatitude,
+            profile.addressLine2?.latitude);
+        await _cacheProfileValue(StorageUtil.profileAddressTwoLongitude,
+            profile.addressLine2?.longitude);
         await _cacheProfileValue(StorageUtil.profileScores, profile.scores);
         await _cacheProfileValue(StorageUtil.profileStatus, profile.status);
         await _cacheProfileValue(StorageUtil.profileDataId, profile.dataId);

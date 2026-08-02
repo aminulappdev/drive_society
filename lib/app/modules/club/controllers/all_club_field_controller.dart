@@ -89,6 +89,7 @@ class AllClubFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -124,6 +125,7 @@ class AllClubFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -158,6 +160,7 @@ class AllClubFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -189,6 +192,7 @@ class AllClubFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,

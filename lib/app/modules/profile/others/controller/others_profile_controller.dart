@@ -25,7 +25,7 @@ class OthersProfileController extends GetxController {
   Future<bool> fetchOthersProfileData(String id) async {
     print('Fetching profile data for id: $id');
     _inProgress = true;
-    update(); // Notify UI to show loading
+    update(); // Notify UI to show loading 
 
     final NetworkResponse response = await networkCaller.getRequest(
       Urls.otherProfileById(id),

@@ -43,9 +43,10 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   onTap: () {
                     Get.back();
                   },
-                  child: const Icon(
+                  child: const Icon( 
                     Icons.arrow_back_ios,
                     color: AppColors.black,
+                    size: 20,
                   ),
                 ),
                 SizedBox(width: 8,),
@@ -70,9 +71,10 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                 profileImage: feed?.author?.photoUrl ?? '',
                 clubName: feed?.author?.name ?? '',
                 userName: feed?.author?.name ?? 'Unknown',
+                location: null,
                 contentPaths: feed!.content,
                 description: feed.description ?? '',
-                hashtags: feed.tags.isNotEmpty ? feed.tags[0] : '',
+                tags: feed.tags,
                 date: dateFormatter.getRelativeTimeFormat(),
                 likes: feed.contentMeta?.like ?? 0,
                 comments: feed.contentMeta?.comment ?? 0,

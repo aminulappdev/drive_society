@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../app_color/app_colors.dart';
 import '../app_text_style/styles.dart';
 
@@ -16,8 +17,11 @@ class CustomTextField extends StatefulWidget {
   final bool isPassword;
   final Color? textColor;
   final int? maxLines;
+  final int? maxLength;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final AutovalidateMode? autovalidateMode;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CustomTextField({
     super.key,
@@ -34,8 +38,11 @@ class CustomTextField extends StatefulWidget {
     this.isPassword = false,
     this.textColor,
     this.maxLines = 1,
+    this.maxLength,
     this.keyboardType,
     this.validator,
+    this.autovalidateMode,
+    this.inputFormatters,
   });
 
   @override
@@ -65,12 +72,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onChanged: widget.onChange,
         controller: widget.controller,
         maxLines: widget.maxLines,
+        maxLength: widget.maxLength,
         keyboardType: widget.keyboardType ?? (widget.isPassword
             ? TextInputType.text
             : TextInputType.text),
         obscureText: widget.isPassword ? _obscureText : false,
         style: TextStyle(color: widget.textColor ?? AppColors.black),
         validator: widget.validator,
+        autovalidateMode: widget.autovalidateMode,
+        inputFormatters: widget.inputFormatters,
         decoration: InputDecoration(
           hintText: widget.hintText ?? '',
           hintStyle: widget.hintTextStyle ?? h5.copyWith(color: AppColors.black),
@@ -91,6 +101,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : widget.sufIcon,
           border: InputBorder.none,
           errorStyle: TextStyle(color: AppColors.red),
+          counterText: '',
         ),
       ),
     );

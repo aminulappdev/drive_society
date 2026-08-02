@@ -21,11 +21,8 @@ class EditProfileController extends GetxController {
   Future<bool> updateProfile(
     String name,
     String bio,
-    String address,
-    String addressTwo,
-    String poBox,
-    String city,
-    int postalCode,
+    Map<String, dynamic> addressLine1,
+    Map<String, dynamic> addressLine2,
     File? image, {
     File? cover,
   }) async {
@@ -39,8 +36,8 @@ class EditProfileController extends GetxController {
     update();
 
     print(
-      'Name: $name, Bio: $bio, Address: $address, Address Two: $addressTwo, '
-      'PO Box: $poBox, City: $city, Postal Code: $postalCode, Image: $image',
+      'Name: $name, Bio: $bio, Address 1: $addressLine1, '
+      'Address 2: $addressLine2, Image: $image',
     );
 
     try {
@@ -62,11 +59,8 @@ class EditProfileController extends GetxController {
       Map<String, dynamic> jsonFields = {
         "name": name,
         "bio": bio,
-        "address": address,
-        "addressTwo": addressTwo,
-        "poBox": poBox,
-        "city": city,
-        "postalCode": postalCode,
+        "addressLine1": addressLine1,
+        "addressLine2": addressLine2,
       };
 
       request.fields['data'] = jsonEncode(jsonFields);

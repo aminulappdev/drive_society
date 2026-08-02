@@ -52,7 +52,7 @@ class _SavedViewState extends State<SavedView> {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: [ 
           sh12,
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),

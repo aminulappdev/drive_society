@@ -40,7 +40,7 @@ class _CreateReviewScreenState extends State<CreateReviewScreen> {
       );
 
       if (isSuccess) {
-        Get.back();
+        Get.back(result: true);
         // _reviewController.clear();
       } else {
         showSnackBarMessage(

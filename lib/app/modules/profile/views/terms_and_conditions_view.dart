@@ -9,7 +9,7 @@ import '../../../../common/app_images/app_images.dart';
 class TermsAndConditionsView extends GetView {
   final String data;
   const TermsAndConditionsView({ required this.data, super.key});
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainColor,

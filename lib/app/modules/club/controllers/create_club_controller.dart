@@ -11,6 +11,7 @@ import 'package:mime/mime.dart';
 import 'package:http/http.dart' as http;
 
 class CreateClubController extends GetxController {
+  static const int maxClubNameLength = 80;
   var _inProgress = false.obs; // Changed to RxBool
   bool get inProgress => _inProgress.value; // Updated getter to use .value
   String? _errorMessage;
@@ -21,6 +22,14 @@ class CreateClubController extends GetxController {
   Future<bool> createClub(
       String name, String privacy, String description, File? image,
       {File? cover}) async {
+    final normalizedName = name.trim();
+    if (normalizedName.isEmpty || normalizedName.length > maxClubNameLength) {
+      _errorMessage =
+          "Club name must be between 1 and $maxClubNameLength characters.";
+      update();
+      return false;
+    }
+
     bool isSuccess = false;
     _inProgress.value = true;
     update();
@@ -42,7 +51,7 @@ class CreateClubController extends GetxController {
 
       // ✅ Set 'data' field with JSON-encoded string
       Map<String, dynamic> jsonFields = {
-        "name": name,
+        "name": normalizedName,
         "type": privacy,
         "description": description
       };

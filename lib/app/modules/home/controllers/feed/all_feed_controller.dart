@@ -47,7 +47,7 @@ class AllFeedController extends GetxController {
 
     Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
     final NetworkResponse response = await networkCaller.getRequest(
-      Urls.allfeedUrl,
+      Urls.allfeedUrl, 
       queryParams: queryParams,
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
@@ -90,6 +90,7 @@ class AllFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -125,6 +126,7 @@ class AllFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -159,6 +161,7 @@ class AllFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,
@@ -190,6 +193,7 @@ class AllFeedController extends GetxController {
       print('Post found at index: $index');
       final post = postList[index];
       postList[index] = AllFeedItemModel(
+        location: post.location,
         hideBy: post.hideBy,
         id: post.id,
         author: post.author,

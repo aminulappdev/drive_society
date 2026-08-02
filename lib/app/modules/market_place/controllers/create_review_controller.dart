@@ -15,7 +15,6 @@ class CreateReviewController extends GetxController {
   RxString? _errorMessage = ''.obs;
   String? get errorMessage => _errorMessage?.value;
 
-
   @override
   void onInit() {
     super.onInit();
@@ -29,16 +28,14 @@ class CreateReviewController extends GetxController {
     _inProgress.value = true;
 
     Map<String, dynamic> requestBody = {
-      "user": user,
-      "modelType": modelType, // here model type: User | Car based on reference
-      "reference":
-          reference, //  reference is userID or userID based on model type
+      "reference": reference, //  reference is carID
       "review": review,
       "rating": rating
     };
 
     final NetworkResponse response = await Get.find<NetworkCaller>()
-        .postRequest(Urls.reviewUrl, requestBody,accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
+        .postRequest(Urls.reviewUrl, requestBody,
+            accesToken: StorageUtil.getData(StorageUtil.userAccessToken));
 
     if (response.isSuccess) {
       _errorMessage = null;

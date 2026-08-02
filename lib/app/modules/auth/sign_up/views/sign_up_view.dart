@@ -6,6 +6,7 @@ import 'package:dirve_society/app/modules/auth/sign_up/controllers/sign_up_contr
 import 'package:dirve_society/common/widgets/custom_background.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import '../../../../../common/app_color/app_colors.dart';
 import '../../../../../common/app_images/app_images.dart';
@@ -13,6 +14,7 @@ import '../../../../../common/app_text_style/styles.dart';
 import '../../../../../common/size_box/custom_sizebox.dart';
 import '../../../../../common/widgets/custom_button.dart';
 import '../../../../../common/widgets/custom_textfield.dart';
+import '../../../../../common/widgets/location_autocomplete_field.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -30,6 +32,46 @@ class _SignUpViewState extends State<SignUpView> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final addressController = TextEditingController();
+  String _poBox = '';
+  String _city = '';
+  String _postalCode = '';
+  String _country = '';
+  double _latitude = 0.0;
+  double _longitude = 0.0;
+
+  Future<void> _applySelectedAddress(LocationSearchResult result) async {
+    _latitude = result.latitude ?? 0.0;
+    _longitude = result.longitude ?? 0.0;
+
+    if (result.latitude == null || result.longitude == null) {
+      return;
+    }
+
+    try {
+      final placemarks = await placemarkFromCoordinates(
+        result.latitude!,
+        result.longitude!,
+      );
+
+      if (placemarks.isEmpty || !mounted) return;
+
+      final place = placemarks.first;
+      setState(() {
+        _postalCode = place.postalCode ?? '';
+        _poBox = place.postalCode ?? '';
+        _city = place.locality ?? place.subAdministrativeArea ?? '';
+        _country = place.country ?? '';
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _poBox = '';
+        _city = '';
+        _postalCode = '';
+        _country = '';
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -114,12 +156,14 @@ class _SignUpViewState extends State<SignUpView> {
                       ),
                     ),
                     sh8,
-                    CustomTextField(
-                      hintTextStyle: const TextStyle(color: Colors.white),
-                      textColor: Colors.white,
-                      onChange: (String value) {},
+                    LocationAutocompleteField(
                       controller: addressController,
                       hintText: 'Your address',
+                      textColor: Colors.white,
+                      hintTextStyle: const TextStyle(color: Colors.white),
+                      borderColor: Colors.white24,
+                      suffixIconColor: Colors.white,
+                      onSelected: _applySelectedAddress,
                     ),
                     sh12,
                     Text(
@@ -201,7 +245,15 @@ class _SignUpViewState extends State<SignUpView> {
                         nameController.text.trim(),
                         emailController.text.trim(),
                         passwordController.text.trim(),
-                        addressController.text.trim(),
+                        {
+                          "address": addressController.text.trim(),
+                          "poBox": _poBox,
+                          "city": _city,
+                          "postalCode": _postalCode,
+                          "country": _country,
+                          "latitude": _latitude,
+                          "longitude": _longitude,
+                        },
                       );
                     },
                   ),
@@ -241,13 +293,13 @@ class _SignUpViewState extends State<SignUpView> {
     String name,
     String email,
     String password,
-    String address,
+    Map<String, dynamic> addressLine1,
   ) async {
     final bool isSuccess = await signUpController.createUser(
       name,
       email,
       password,
-      address,
+      addressLine1,
     );
 
     if (isSuccess) {
@@ -261,4 +313,4 @@ class _SignUpViewState extends State<SignUpView> {
       );
     }
   }
-}
+} 

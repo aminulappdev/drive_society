@@ -9,7 +9,7 @@ class MyFeedController extends GetxController {
   final NetworkCaller networkCaller = Get.put(NetworkCaller());
 
   bool _inProgress = false;
-  bool get inProgress => _inProgress;
+  bool get inProgress => _inProgress; 
 
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
@@ -33,7 +33,7 @@ class MyFeedController extends GetxController {
     Map<String, dynamic> queryParams = {'limit': _limit, 'page': page};
     final NetworkResponse response = await networkCaller.getRequest(
       Urls.myfeedUrl,
-      queryParams: queryParams,
+      queryParams: queryParams, 
       accesToken: StorageUtil.getData(StorageUtil.userAccessToken),
     );
 

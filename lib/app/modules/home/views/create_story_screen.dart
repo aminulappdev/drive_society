@@ -6,6 +6,7 @@ import 'package:dirve_society/app/modules/home/controllers/feed/create_story_con
 import 'package:dirve_society/app/modules/profile/controllers/my_club_controller.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
 import 'package:dirve_society/common/widgets/image_picker.dart';
+import 'package:dirve_society/common/widgets/image_preview_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,36 +39,6 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   final ImagePickerHelper _imagePickerHelper = ImagePickerHelper();
 
   /// ইমেজ প্রিভিউ দেখানোর জন্য
-  void _showImagePreview(File image) {
-    showDialog(
-      context: context,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            Center(
-              child: InteractiveViewer(
-                child: Image.file(
-                  image,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 40,
-              right: 20,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,7 +86,10 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                   label: 'Upload',
                   // ইমেজ থাকলে ট্যাপ করে প্রিভিউ দেখানো
                   onImageTap: profileImage != null
-                      ? () => _showImagePreview(profileImage!)
+                      ? () => ImagePreviewDialog.showFile(
+                            context,
+                            imageFile: profileImage!,
+                          )
                       : null,
                 ),
                 sh100,

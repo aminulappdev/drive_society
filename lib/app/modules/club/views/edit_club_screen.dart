@@ -25,6 +25,7 @@ class EditClubView extends StatefulWidget {
 }
 
 class _EditClubViewState extends State<EditClubView> {
+  static const int _clubNameMaxLength = 80;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final ClubDetailsController clubDetailsController =
@@ -92,9 +93,34 @@ class _EditClubViewState extends State<EditClubView> {
                   Text('Club Name', style: h5),
                   sh8,
                   CustomTextField(
-                     onChange: (String value) {  },
+                    onChange: (String value) {},
                     controller: nameController,
                     hintText: 'Enter your club name',
+                    maxLength: _clubNameMaxLength,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      final name = value?.trim() ?? '';
+                      if (name.isEmpty) {
+                        return 'Club name is required';
+                      }
+                      if (name.length > _clubNameMaxLength) {
+                        return 'Club name must be $_clubNameMaxLength characters or fewer';
+                      }
+                      return null;
+                    },
+                  ),
+                  sh8,
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: nameController,
+                    builder: (context, value, child) {
+                      return Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          '${value.text.characters.length}/$_clubNameMaxLength',
+                          style: h6.copyWith(color: AppColors.grey),
+                        ),
+                      );
+                    },
                   ),
                   sh16,
                   Text('Privacy', style: h5),
@@ -133,9 +159,11 @@ class _EditClubViewState extends State<EditClubView> {
                   Text('Description', style: h5),
                   sh8,
                   CustomTextField(
-                     onChange: (String value) {  },
+                    height: 120,
+                    onChange: (String value) {},
                     controller: descriptionController,
                     hintText: 'Describe about your club',
+                    maxLines: 5,
                   ),
                   sh16,
                   Text('Profile Photo', style: h5),
@@ -147,7 +175,7 @@ class _EditClubViewState extends State<EditClubView> {
                         setState(() {
                           profileImage = pickedImage;
                         });
-                      });
+                      }, aspectRatioX: 1, aspectRatioY: 1);
                     },
                     imagePath: AppImages.upload,
                     imageFile: profileImage,
@@ -165,7 +193,7 @@ class _EditClubViewState extends State<EditClubView> {
                         setState(() {
                           coverImage = pickedImage;
                         });
-                      });
+                      }, aspectRatioX: 16, aspectRatioY: 9);
                     },
                     imagePath: AppImages.upload,
                     imageFile: coverImage,
@@ -197,9 +225,9 @@ class _EditClubViewState extends State<EditClubView> {
     if (formKey.currentState!.validate()) {
       final bool isSuccess = await editClubController.editClub( 
         widget.clubId,
-        nameController.text,
+        nameController.text.trim(),
         privacy,
-        descriptionController.text,
+        descriptionController.text.trim(),
         profileImage,
         cover: coverImage,
       );

@@ -23,7 +23,7 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  final AllClubFeedController allClubFeedController =
+  final AllClubFeedController allClubFeedController = 
       Get.put(AllClubFeedController());
 
   final ReactPostController reactPostController =
@@ -181,9 +181,10 @@ class _FeedScreenState extends State<FeedScreen> {
                       profileImage: feed.author?.photoUrl ?? '',
                       clubName: feed.author?.name ?? '',
                       userName: feed.author?.name ?? 'Unknown',
+                      location: feed.location?.address,
                       contentPaths: feed.content,
                       description: feed.description ?? '',
-                      hashtags: feed.tags.isNotEmpty ? feed.tags[0] : '',
+                      tags: feed.tags,
                       date: dateFormatter.getRelativeTimeFormat(),
                       likes: feed.contentMeta?.like ?? 0,
                       comments: feed.contentMeta?.comment ?? 0,

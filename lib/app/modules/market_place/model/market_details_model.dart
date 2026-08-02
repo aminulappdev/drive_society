@@ -5,7 +5,7 @@ class MarketPlaceDetailsModel {
         required this.message,
         required this.data,
     });
-
+ 
     final bool? success;
     final int? statusCode;
     final String? message;
@@ -24,9 +24,17 @@ class MarketPlaceDetailsModel {
 
 class MarketDetailsData {
     MarketDetailsData({
+        required this.derivative,
+        required this.bodyType,
+        required this.doors,
+        required this.postcode,
+        required this.sellerType,
         required this.id,
         required this.brand,
         required this.model,
+        required this.condition,
+        required this.year,
+        required this.color,
         required this.mileage,
         required this.fuelType,
         required this.transmission,
@@ -38,15 +46,24 @@ class MarketDetailsData {
         required this.contentMeta,
         required this.avgRating,
         required this.ratingCount,
+        required this.isSale,
         required this.isDeleted,
         required this.createdAt,
         required this.updatedAt,
         required this.v,
     });
 
+    final String? derivative;
+    final String? bodyType;
+    final dynamic doors;
+    final String? postcode;
+    final String? sellerType;
     final String? id;
     final String? brand;
     final String? model;
+    final String? condition;
+    final String? year;
+    final String? color;
     final dynamic mileage;
     final String? fuelType;
     final String? transmission;
@@ -58,6 +75,7 @@ class MarketDetailsData {
     final String? contentMeta;
     final dynamic avgRating;
     final dynamic ratingCount;
+    final bool? isSale;
     final bool? isDeleted;
     final DateTime? createdAt;
     final DateTime? updatedAt;
@@ -65,9 +83,17 @@ class MarketDetailsData {
 
     factory MarketDetailsData.fromJson(Map<String, dynamic> json){ 
         return MarketDetailsData(
+            derivative: json["derivative"],
+            bodyType: json["bodyType"],
+            doors: json["doors"],
+            postcode: json["postcode"],
+            sellerType: json["sellerType"],
             id: json["_id"],
             brand: json["brand"],
             model: json["model"],
+            condition: json["condition"],
+            year: json["year"]?.toString(),
+            color: json["color"],
             mileage: json["mileage"],
             fuelType: json["fuelType"],
             transmission: json["transmission"],
@@ -79,6 +105,7 @@ class MarketDetailsData {
             contentMeta: json["contentMeta"],
             avgRating: json["avgRating"],
             ratingCount: json["ratingCount"],
+            isSale: json["isSale"],
             isDeleted: json["isDeleted"],
             createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
             updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),

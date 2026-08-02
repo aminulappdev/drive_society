@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,12 +40,59 @@ class MeetsController extends GetxController {
   final AllMeetsController allMeetsController = Get.put(AllMeetsController());
   final Rx<Set<Marker>> markers = Rx<Set<Marker>>({});
   final RxBool isLoading = true.obs;
+  final Rx<LatLng> currentCenter =
+      const LatLng(23.76784914290362, 90.42213245820426).obs;
   GoogleMapController? mapController;
 
   @override
   void onInit() {
     super.onInit();
+    _loadCurrentLocation();
     loadMarkers();
+  }
+
+  Future<void> _loadCurrentLocation() async {
+    final location = Location();
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    PermissionStatus permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    final locationData = await location.getLocation();
+    final latitude = locationData.latitude;
+    final longitude = locationData.longitude;
+
+    if (latitude == null || longitude == null) {
+      return;
+    }
+
+    final target = LatLng(latitude, longitude);
+    currentCenter.value = target;
+
+    if (mapController != null) {
+      await mapController!.animateCamera(
+        CameraUpdate.newLatLngZoom(target, 14),
+      );
+    }
+  }
+
+  Future<void> onMapCreated(GoogleMapController controller) async {
+    mapController = controller;
+    await mapController!.animateCamera(
+      CameraUpdate.newLatLngZoom(currentCenter.value, 14),
+    );
   }
 
   Future<void> loadMarkers() async {

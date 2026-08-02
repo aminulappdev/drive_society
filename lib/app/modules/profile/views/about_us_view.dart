@@ -6,8 +6,6 @@ import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
-import '../../../../common/const_text/const_text.dart';
-import '../../../../common/size_box/custom_sizebox.dart';
 
 class AboutUsView extends GetView {
   final String data;

@@ -24,6 +24,7 @@ class CreateClubView extends StatefulWidget {
 }
 
 class _CreateClubViewState extends State<CreateClubView> {
+  static const int _clubNameMaxLength = 80;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController(); 
   String privacy = 'public'; // Changed from final to non-final
@@ -77,6 +78,31 @@ class _CreateClubViewState extends State<CreateClubView> {
                   onChange: (String value) {},
                   controller: nameController,
                   hintText: 'Enter your club name',
+                  maxLength: _clubNameMaxLength,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    final name = value?.trim() ?? '';
+                    if (name.isEmpty) {
+                      return 'Club name is required';
+                    }
+                    if (name.length > _clubNameMaxLength) {
+                      return 'Club name must be $_clubNameMaxLength characters or fewer';
+                    }
+                    return null;
+                  },
+                ),
+                sh8,
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: nameController,
+                  builder: (context, value, child) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${value.text.characters.length}/$_clubNameMaxLength',
+                        style: h6.copyWith(color: AppColors.grey),
+                      ),
+                    );
+                  },
                 ),
                 sh16,
                 Text(
@@ -121,9 +147,11 @@ class _CreateClubViewState extends State<CreateClubView> {
                 ),
                 sh8,
                 CustomTextField(
+                  height: 120,
                   onChange: (String value) {},
                   controller: descriptionController,
                   hintText: 'Describe about your club',
+                  maxLines: 5,
                 ),
                 sh16,
                 Text(
@@ -138,7 +166,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                       setState(() {
                         profileImage = pickedImage;
                       });
-                    });
+                    }, aspectRatioX: 1, aspectRatioY: 1);
                   },
                   imagePath: AppImages.upload,
                   imageFile: profileImage,
@@ -157,7 +185,7 @@ class _CreateClubViewState extends State<CreateClubView> {
                       setState(() {
                         coverImage = pickedImage;
                       });
-                    });
+                    }, aspectRatioX: 16, aspectRatioY: 9);
                   },
                   imagePath: AppImages.upload,
                   imageFile: coverImage,
@@ -189,9 +217,9 @@ class _CreateClubViewState extends State<CreateClubView> {
   Future<void> createClub() async {
     if (formKey.currentState!.validate()) {
       final bool isSuccess = await createClubController.createClub(
-        nameController.text,
+        nameController.text.trim(),
         privacy,
-        descriptionController.text,
+        descriptionController.text.trim(),
         profileImage,
         cover: coverImage,
       );

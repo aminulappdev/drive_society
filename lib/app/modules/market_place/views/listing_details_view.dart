@@ -14,6 +14,7 @@ import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:dirve_society/common/widgets/custom_button.dart';
 import 'package:dirve_society/common/widgets/custom_circular_container.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
@@ -38,6 +39,19 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
   final GetChatIdController getChatIdController =
       Get.put(GetChatIdController());
   final AddChatController addChatController = Get.put(AddChatController());
+
+  Future<void> _openReviewScreen(String listingId) async {
+    final bool? reviewSubmitted = await Get.to<bool>(
+      () => CreateReviewScreen(listingId: listingId),
+    );
+
+    if (reviewSubmitted == true) {
+      await Future.wait([
+        marketplaceDetailsController.getMarketPlaceData(widget.id),
+        allReviewController.getReview(widget.id),
+      ]);
+    }
+  }
 
   @override
   void initState() {
@@ -72,10 +86,18 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
         child: GetBuilder<MarketplaceDetailsController>(builder: (controller) {
           if (controller.inProgress) {
             return SizedBox(
-              height: 550, child: const Center(child: CircularProgressIndicator()));
+                height: 550,
+                child: const Center(child: CircularProgressIndicator()));
           }
           print(
               'Product model ${controller.marketPlaceDetailsModel?.images.length}');
+          final String currentProfileId =
+              StorageUtil.getData(StorageUtil.profileId) ?? '';
+          final bool isOwnListing =
+              controller.marketPlaceDetailsModel?.author?.id == currentProfileId;
+          final bool canReview =
+              !isOwnListing &&
+              (controller.marketPlaceDetailsModel?.isSale ?? false);
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,39 +123,44 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
               ),
               controller.marketPlaceDetailsModel!.images.isEmpty
                   ? SizedBox.shrink()
-                  : SizedBox(
-                      height: 90,
-                      child: ListView.builder(
-                        itemCount:
-                            controller.marketPlaceDetailsModel!.images.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          print('Index: $index');
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Container(
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: AppColors.silver,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  controller
-                                      .marketPlaceDetailsModel!.images[index],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset(
-                                    AppImages.carImageFour,
+                  : Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SizedBox(
+                        height: 90,
+                        child: ListView.builder(
+                          itemCount:
+                              controller.marketPlaceDetailsModel!.images.length,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            print('Index: $index');
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.only(right: 8.0,),
+                              child: Container(
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: AppColors.silver,
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.network(
+                                    controller
+                                        .marketPlaceDetailsModel!.images[index],
                                     fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            Image.asset(
+                                      AppImages.carImageFour,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
               sh20,
@@ -171,12 +198,12 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                             imagePath: AppImages.transmission,
                             label: 'Transmission',
                             value:
-                                '${controller.marketPlaceDetailsModel?.mileage} Mi'),
+                                '${controller.marketPlaceDetailsModel?.transmission}'),
                         InfoContainer(
                             imagePath: AppImages.mileage,
                             label: 'Mileage',
                             value:
-                                '${controller.marketPlaceDetailsModel?.transmission}'),
+                                '${controller.marketPlaceDetailsModel?.mileage} Mi'),
                         InfoContainer(
                             imagePath: AppImages.fuel,
                             label: 'Fuel',
@@ -330,7 +357,7 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return SizedBox(
-                  height: 170,
+                  height: MediaQuery.of(context).size.height * 0.18,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: controller.allReviewList?.length ?? 0,
@@ -363,12 +390,35 @@ class _ListingDetailsViewState extends State<ListingDetailsView> {
                       fontSize: 14,
                       color: Colors.white,
                       fontWeight: FontWeight.normal),
-                  backgroundColor: Colors.grey,
+                  backgroundColor:
+                      canReview ? AppColors.darkRed : Colors.grey,
                   text: 'Rate this seller on marketplace',
                   onPressed: () {
-                    Get.to(() => CreateReviewScreen(
-                          listingId: controller.marketPlaceDetailsModel!.id!,
-                        ));
+                    if (isOwnListing) {
+                      showSnackBarMessage(
+                        context,
+                        'You can’t review your own listing.',
+                        false,
+                        'Notice',
+                      );
+                      return;
+                    }
+
+                    if (!(controller.marketPlaceDetailsModel?.isSale ?? false)) {
+                      showSnackBarMessage(
+                        context,
+                        'Rating becomes available after a completed sale or direct communication.',
+                        false,
+                        'Not Available Yet',
+                      );
+                      return;
+                    }
+                    
+                    if (controller.marketPlaceDetailsModel?.id != null) {
+                      _openReviewScreen(
+                        controller.marketPlaceDetailsModel!.id!,
+                      );
+                    }
                   },
                 ),
               ),
