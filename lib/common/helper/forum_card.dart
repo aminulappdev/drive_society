@@ -10,7 +10,7 @@ class ForumCard extends StatelessWidget {
   final String clubName;
   final String author;
   final String date;
-  final String title;
+  final String title; 
   final String description;
   final IconData likeData;
   final int likes;

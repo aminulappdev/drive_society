@@ -150,8 +150,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Obx(() {
+    return Obx(() {
         print(
             'Obx rebuild triggered with postList length: ${allClubFeedController.postList.length}');
         if (allClubFeedController.inProgress &&
@@ -225,9 +224,8 @@ class _FeedScreenState extends State<FeedScreen> {
                     )
                   : Container();
             },
-          );
+            );
         }
-      }),
-    );
+      });
   }
 }

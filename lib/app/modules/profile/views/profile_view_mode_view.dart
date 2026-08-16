@@ -39,7 +39,7 @@ class ProfileViewModeView extends GetView {
                     Get.back();
                   },
                   child: Container(
-                      decoration: ShapeDecoration(
+                      decoration: ShapeDecoration( 
                         shape: CircleBorder(),
                         color: AppColors.black.withOpacity(0.3),
                       ),

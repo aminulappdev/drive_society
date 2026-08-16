@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MarketPlaceView extends StatefulWidget {
-  const MarketPlaceView({super.key});
+  const MarketPlaceView({super.key}); 
 
   @override
   State<MarketPlaceView> createState() => _MarketPlaceViewState();

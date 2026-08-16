@@ -23,9 +23,10 @@ class MyClubsView extends StatefulWidget {
 
 class _MyClubsViewState extends State<MyClubsView> {
   final MyClubController myClubController = Get.put(MyClubController());
-  final ProfileController profileController = Get.isRegistered<ProfileController>()
-      ? Get.find<ProfileController>()
-      : Get.put(ProfileController());
+  final ProfileController profileController =
+      Get.isRegistered<ProfileController>()
+          ? Get.find<ProfileController>()
+          : Get.put(ProfileController());
   final MyJoiningClubController myJoiningClubController =
       Get.put(MyJoiningClubController());
 
@@ -52,20 +53,23 @@ class _MyClubsViewState extends State<MyClubsView> {
             Obx(() {
               final profile = profileController.profileData.value;
               return ProfileHeaderLayout(
-                title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
-                coverImageUrl:
-                    profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
-                profileImageUrl:
-                    profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+                title: profile?.name ??
+                    StorageUtil.getData(StorageUtil.profileName) ??
+                    '',
+                coverImageUrl: profile?.coverPhoto ??
+                    StorageUtil.getData(StorageUtil.profileCoverPhoto),
+                profileImageUrl: profile?.photoUrl ??
+                    StorageUtil.getData(StorageUtil.profilePhotoUrl),
                 onBack: Get.back,
-                subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+                subtitle: profile?.bio ??
+                    StorageUtil.getData(StorageUtil.profileBio) ??
+                    '',
                 ratingText:
                     '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
                 pointsText:
                     '${profile?.scores ?? StorageUtil.getData(StorageUtil.profileScores) ?? '0'} Points',
               );
             }),
-           
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -117,6 +121,7 @@ class _MyClubsViewState extends State<MyClubsView> {
                         rejectedButton: () {},
                         ontap: () {
                           Get.to(() => ClubView(
+                                name: controller.myClubList?[index].name ?? '',
                                 isAuthor: true,
                                 authorId:
                                     controller.myClubList![index].owner?.id ??
@@ -175,6 +180,9 @@ class _MyClubsViewState extends State<MyClubsView> {
                         rejectedButton: () {},
                         ontap: () {
                           Get.to(() => ClubView(
+                                name: controller.myJoiningClubList![index]
+                                        .reference?.name ??
+                                    '',
                                 isAuthor: false,
                                 authorId: controller.myJoiningClubList![index]
                                         .reference?.owner ??

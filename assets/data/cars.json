@@ -1,0 +1,680 @@
+[
+  {
+    "make": "Abarth",
+    "models": [
+      "500",
+      "500e",
+      "595",
+      "695",
+      "Grande Punto"
+    ]
+  },
+  {
+    "make": "Alfa Romeo",
+    "models": [
+      "Giulia",
+      "Giulietta",
+      "Stelvio",
+      "Tonale",
+      "4C",
+      "MiTo"
+    ]
+  },
+  {
+    "make": "Alpine",
+    "models": [
+      "A110"
+    ]
+  },
+  {
+    "make": "Aston Martin",
+    "models": [
+      "DB11",
+      "DB12",
+      "DBX",
+      "Vantage",
+      "Vanquish",
+      "Rapide"
+    ]
+  },
+  {
+    "make": "Audi",
+    "models": [
+      "A1",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+      "Q2",
+      "Q3",
+      "Q4 e-tron",
+      "Q5",
+      "Q7",
+      "Q8",
+      "TT",
+      "R8",
+      "e-tron",
+      "RS3",
+      "RS4",
+      "RS6",
+      "S3",
+      "S4",
+      "S5"
+    ]
+  },
+  {
+    "make": "Bentley",
+    "models": [
+      "Continental GT",
+      "Bentayga",
+      "Flying Spur",
+      "Mulsanne"
+    ]
+  },
+  {
+    "make": "BMW",
+    "models": [
+      "1 Series",
+      "2 Series",
+      "3 Series",
+      "4 Series",
+      "5 Series",
+      "6 Series",
+      "7 Series",
+      "8 Series",
+      "X1",
+      "X2",
+      "X3",
+      "X4",
+      "X5",
+      "X6",
+      "X7",
+      "Z4",
+      "i3",
+      "i4",
+      "i7",
+      "i8",
+      "iX",
+      "iX1",
+      "iX3",
+      "M2",
+      "M3",
+      "M4",
+      "M5"
+    ]
+  },
+  {
+    "make": "BYD",
+    "models": [
+      "Atto 3",
+      "Dolphin",
+      "Seal",
+      "Han",
+      "Tang"
+    ]
+  },
+  {
+    "make": "Chevrolet",
+    "models": [
+      "Camaro",
+      "Corvette",
+      "Captiva",
+      "Cruze",
+      "Spark"
+    ]
+  },
+  {
+    "make": "Chrysler",
+    "models": [
+      "300C",
+      "Grand Voyager",
+      "PT Cruiser"
+    ]
+  },
+  {
+    "make": "Citroën",
+    "models": [
+      "C1",
+      "C3",
+      "C3 Aircross",
+      "C4",
+      "C4 Cactus",
+      "C4 X",
+      "C5",
+      "C5 Aircross",
+      "Berlingo",
+      "DS3 (legacy)",
+      "Picasso"
+    ]
+  },
+  {
+    "make": "Cupra",
+    "models": [
+      "Formentor",
+      "Leon",
+      "Born",
+      "Ateca",
+      "Tavascan"
+    ]
+  },
+  {
+    "make": "Dacia",
+    "models": [
+      "Sandero",
+      "Duster",
+      "Jogger",
+      "Spring"
+    ]
+  },
+  {
+    "make": "DS",
+    "models": [
+      "DS3",
+      "DS4",
+      "DS7",
+      "DS9"
+    ]
+  },
+  {
+    "make": "Ferrari",
+    "models": [
+      "296",
+      "F8 Tributo",
+      "Roma",
+      "Portofino",
+      "SF90",
+      "812",
+      "Purosangue"
+    ]
+  },
+  {
+    "make": "Fiat",
+    "models": [
+      "500",
+      "500e",
+      "500X",
+      "Panda",
+      "Tipo",
+      "Punto",
+      "Doblo"
+    ]
+  },
+  {
+    "make": "Ford",
+    "models": [
+      "Fiesta",
+      "Focus",
+      "Puma",
+      "Kuga",
+      "Mondeo",
+      "EcoSport",
+      "Ka+",
+      "Mustang",
+      "Mustang Mach-E",
+      "S-Max",
+      "Galaxy",
+      "Ranger",
+      "Edge",
+      "B-Max",
+      "C-Max",
+      "Explorer"
+    ]
+  },
+  {
+    "make": "Genesis",
+    "models": [
+      "G70",
+      "G80",
+      "G90",
+      "GV60",
+      "GV70",
+      "GV80"
+    ]
+  },
+  {
+    "make": "Honda",
+    "models": [
+      "Civic",
+      "Jazz",
+      "CR-V",
+      "HR-V",
+      "e",
+      "Accord",
+      "Insight"
+    ]
+  },
+  {
+    "make": "Hyundai",
+    "models": [
+      "i10",
+      "i20",
+      "i30",
+      "Tucson",
+      "Santa Fe",
+      "Kona",
+      "Ioniq",
+      "Ioniq 5",
+      "Ioniq 6",
+      "Bayon"
+    ]
+  },
+  {
+    "make": "Infiniti",
+    "models": [
+      "Q30",
+      "Q50",
+      "Q60",
+      "QX30",
+      "QX70"
+    ]
+  },
+  {
+    "make": "Isuzu",
+    "models": [
+      "D-Max"
+    ]
+  },
+  {
+    "make": "Jaguar",
+    "models": [
+      "XE",
+      "XF",
+      "XJ",
+      "F-Type",
+      "F-Pace",
+      "E-Pace",
+      "I-Pace"
+    ]
+  },
+  {
+    "make": "Jeep",
+    "models": [
+      "Renegade",
+      "Compass",
+      "Cherokee",
+      "Grand Cherokee",
+      "Wrangler",
+      "Avenger"
+    ]
+  },
+  {
+    "make": "Kia",
+    "models": [
+      "Picanto",
+      "Rio",
+      "Ceed",
+      "Sportage",
+      "Sorento",
+      "Niro",
+      "EV6",
+      "Stonic",
+      "Soul",
+      "e-Niro"
+    ]
+  },
+  {
+    "make": "Lamborghini",
+    "models": [
+      "Huracan",
+      "Aventador",
+      "Urus",
+      "Revuelto"
+    ]
+  },
+  {
+    "make": "Land Rover",
+    "models": [
+      "Defender",
+      "Discovery",
+      "Discovery Sport",
+      "Range Rover",
+      "Range Rover Sport",
+      "Range Rover Evoque",
+      "Range Rover Velar",
+      "Freelander"
+    ]
+  },
+  {
+    "make": "Lexus",
+    "models": [
+      "IS",
+      "ES",
+      "LS",
+      "RX",
+      "NX",
+      "UX",
+      "RC",
+      "LC",
+      "CT"
+    ]
+  },
+  {
+    "make": "Lotus",
+    "models": [
+      "Elise",
+      "Exige",
+      "Evora",
+      "Emira",
+      "Eletre"
+    ]
+  },
+  {
+    "make": "Maserati",
+    "models": [
+      "Ghibli",
+      "Levante",
+      "Quattroporte",
+      "MC20",
+      "Grecale"
+    ]
+  },
+  {
+    "make": "Mazda",
+    "models": [
+      "2",
+      "3",
+      "6",
+      "CX-3",
+      "CX-5",
+      "CX-30",
+      "CX-60",
+      "MX-5",
+      "MX-30"
+    ]
+  },
+  {
+    "make": "McLaren",
+    "models": [
+      "570S",
+      "600LT",
+      "720S",
+      "765LT",
+      "Artura",
+      "GT"
+    ]
+  },
+  {
+    "make": "Mercedes-Benz",
+    "models": [
+      "A-Class",
+      "B-Class",
+      "C-Class",
+      "E-Class",
+      "S-Class",
+      "CLA",
+      "CLS",
+      "GLA",
+      "GLB",
+      "GLC",
+      "GLE",
+      "GLS",
+      "G-Class",
+      "SL",
+      "AMG GT",
+      "EQA",
+      "EQB",
+      "EQC",
+      "EQE",
+      "EQS"
+    ]
+  },
+  {
+    "make": "MG",
+    "models": [
+      "MG3",
+      "MG4",
+      "MG5",
+      "ZS",
+      "HS",
+      "Marvel R"
+    ]
+  },
+  {
+    "make": "Mini",
+    "models": [
+      "Hatch",
+      "Clubman",
+      "Countryman",
+      "Convertible",
+      "Electric"
+    ]
+  },
+  {
+    "make": "Mitsubishi",
+    "models": [
+      "Space Star",
+      "ASX",
+      "Eclipse Cross",
+      "Outlander",
+      "L200"
+    ]
+  },
+  {
+    "make": "Nissan",
+    "models": [
+      "Micra",
+      "Note",
+      "Juke",
+      "Qashqai",
+      "X-Trail",
+      "Leaf",
+      "Ariya",
+      "GT-R",
+      "370Z"
+    ]
+  },
+  {
+    "make": "Peugeot",
+    "models": [
+      "108",
+      "208",
+      "308",
+      "2008",
+      "3008",
+      "5008",
+      "508",
+      "Rifter",
+      "Partner"
+    ]
+  },
+  {
+    "make": "Polestar",
+    "models": [
+      "Polestar 2",
+      "Polestar 3",
+      "Polestar 4"
+    ]
+  },
+  {
+    "make": "Porsche",
+    "models": [
+      "911",
+      "718 Cayman",
+      "718 Boxster",
+      "Panamera",
+      "Macan",
+      "Cayenne",
+      "Taycan"
+    ]
+  },
+  {
+    "make": "Renault",
+    "models": [
+      "Clio",
+      "Captur",
+      "Megane",
+      "Kadjar",
+      "Scenic",
+      "Zoe",
+      "Twingo",
+      "Arkana",
+      "Austral"
+    ]
+  },
+  {
+    "make": "Rolls-Royce",
+    "models": [
+      "Ghost",
+      "Phantom",
+      "Wraith",
+      "Cullinan",
+      "Dawn",
+      "Spectre"
+    ]
+  },
+  {
+    "make": "Rover",
+    "models": [
+      "25",
+      "45",
+      "75",
+      "MG ZR (legacy)",
+      "MG ZS (legacy)",
+      "MG ZT (legacy)"
+    ]
+  },
+  {
+    "make": "Saab",
+    "models": [
+      "9-3",
+      "9-5"
+    ]
+  },
+  {
+    "make": "SEAT",
+    "models": [
+      "Ibiza",
+      "Leon",
+      "Arona",
+      "Ateca",
+      "Tarraco"
+    ]
+  },
+  {
+    "make": "Škoda",
+    "models": [
+      "Fabia",
+      "Octavia",
+      "Superb",
+      "Kamiq",
+      "Karoq",
+      "Kodiaq",
+      "Scala",
+      "Enyaq"
+    ]
+  },
+  {
+    "make": "Smart",
+    "models": [
+      "ForTwo",
+      "ForFour",
+      "#1"
+    ]
+  },
+  {
+    "make": "SsangYong",
+    "models": [
+      "Korando",
+      "Tivoli",
+      "Rexton",
+      "Musso"
+    ]
+  },
+  {
+    "make": "Subaru",
+    "models": [
+      "Impreza",
+      "Forester",
+      "XV",
+      "Outback",
+      "BRZ"
+    ]
+  },
+  {
+    "make": "Suzuki",
+    "models": [
+      "Swift",
+      "Vitara",
+      "S-Cross",
+      "Ignis",
+      "Jimny",
+      "Celerio"
+    ]
+  },
+  {
+    "make": "Tesla",
+    "models": [
+      "Model S",
+      "Model 3",
+      "Model X",
+      "Model Y"
+    ]
+  },
+  {
+    "make": "Toyota",
+    "models": [
+      "Aygo",
+      "Yaris",
+      "Corolla",
+      "C-HR",
+      "RAV4",
+      "Camry",
+      "Prius",
+      "Land Cruiser",
+      "Hilux",
+      "GR Yaris",
+      "GR86",
+      "bZ4X"
+    ]
+  },
+  {
+    "make": "Vauxhall",
+    "models": [
+      "Corsa",
+      "Astra",
+      "Insignia",
+      "Crossland",
+      "Grandland",
+      "Mokka",
+      "Combo",
+      "Vivaro"
+    ]
+  },
+  {
+    "make": "Volkswagen",
+    "models": [
+      "Polo",
+      "Golf",
+      "Golf GTI",
+      "Passat",
+      "Tiguan",
+      "Touareg",
+      "T-Roc",
+      "T-Cross",
+      "ID.3",
+      "ID.4",
+      "ID.5",
+      "Up!",
+      "Arteon",
+      "Sharan",
+      "Touran"
+    ]
+  },
+  {
+    "make": "Volvo",
+    "models": [
+      "S60",
+      "S90",
+      "V40",
+      "V60",
+      "V90",
+      "XC40",
+      "XC60",
+      "XC90",
+      "EX30",
+      "EX90"
+    ]
+  }
+]

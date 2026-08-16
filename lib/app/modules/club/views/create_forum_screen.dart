@@ -24,6 +24,7 @@ class CreateForumView extends StatefulWidget {
 
 class _CreateForumViewState extends State<CreateForumView> {
   static const int _titleMaxLength = 80;
+  static const int _descriptionMaxLength = 160;
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final CreateForumController createForumController =
@@ -36,7 +37,7 @@ class _CreateForumViewState extends State<CreateForumView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
-      appBar: AppBar(
+      appBar: AppBar( 
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0, 
         title: Text(
@@ -111,6 +112,28 @@ class _CreateForumViewState extends State<CreateForumView> {
                   controller: descriptionController,
                   hintText: 'Describe about your club',
                   maxLines: 5,
+                  maxLength: _descriptionMaxLength,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    final description = value?.trim() ?? '';
+                    if (description.length > _descriptionMaxLength) {
+                      return 'Description must be $_descriptionMaxLength characters or fewer';
+                    }
+                    return null;
+                  },
+                ),
+                sh8,
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: descriptionController,
+                  builder: (context, value, child) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        '${value.text.characters.length}/$_descriptionMaxLength',
+                        style: h6.copyWith(color: AppColors.grey),
+                      ),
+                    );
+                  },
                 ),
                 sh100,
               ],
@@ -142,7 +165,7 @@ class _CreateForumViewState extends State<CreateForumView> {
     if (formKey.currentState!.validate()) {
       final bool isSuccess = await createForumController.createForun(
           titleController.text.trim(),
-          descriptionController.text,
+          descriptionController.text.trim(),
           widget.clubId ?? '');
 
       if (isSuccess) {

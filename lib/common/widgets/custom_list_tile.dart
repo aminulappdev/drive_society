@@ -13,6 +13,8 @@ class CustomListTile extends StatelessWidget {
   final bool switchValue;
   final ValueChanged<bool>? onSwitchChanged;
   final VoidCallback? onTap;
+  final double? iconSize;
+  final bool? isIconData;
 
   const CustomListTile({
     super.key,
@@ -25,20 +27,29 @@ class CustomListTile extends StatelessWidget {
     this.onSwitchChanged,
     this.onTap,
     this.titleStyle,
+    this.iconSize,
+    this.isIconData,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.silver)
-      ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.silver)),
       child: ListTile(
-        leading: Image.asset(
-          leadingImage,
-          scale: 4,
-        ),
+        leading: isIconData == true
+            ? Icon(
+                Icons.group,
+                color: Colors.black87,
+                size: iconSize ?? 20,
+              )
+            : Image.asset(
+                color: Colors.black87,
+                height: iconSize ?? 20,
+                leadingImage,
+                scale: 4,
+              ),
         title: Row(
           children: [
             Text(

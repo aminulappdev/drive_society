@@ -1,6 +1,7 @@
 class AppImages {
   //================ Icons ==================>
   static const splashLogo = "assets/icons/splash logo.png";
+  static const goup02 = "assets/icons/group_02.png";
   static const homeLogo = "assets/icons/home logo.png";
   static const arrowRight = "assets/icons/arrow right.png";
   static const arrowRightNormal = "assets/icons/Arrow right light.png";
@@ -82,6 +83,7 @@ class AppImages {
   static const close = "assets/icons/close.png";
   static const groupLight = "assets/icons/group light.png";
   static const public = "assets/icons/public.png";
+  static const club = "assets/icons/club.png";
 
   static const starCard = "assets/icons/star card.png";
   static const starCardTwo = "assets/icons/star card 2.png";

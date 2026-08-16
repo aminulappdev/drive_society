@@ -14,9 +14,14 @@ import 'package:get/get.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 
 class ForumScreen extends StatefulWidget {
+  final String clubName;
   final String clubId;
   final String authorId;
-  const ForumScreen({super.key, required this.clubId, required this.authorId});
+  const ForumScreen(
+      {super.key,
+      required this.clubId,
+      required this.authorId,
+      required this.clubName});
 
   @override
   State<ForumScreen> createState() => _ForumScreenState();
@@ -24,7 +29,7 @@ class ForumScreen extends StatefulWidget {
 
 class _ForumScreenState extends State<ForumScreen> {
   final AllClubForunController allClubForumController =
-      Get.put(AllClubForunController()); 
+      Get.put(AllClubForunController());
   final ReactPostController reactPostController =
       Get.put(ReactPostController());
   final DisReactPostController disReactPostController =
@@ -106,7 +111,7 @@ class _ForumScreenState extends State<ForumScreen> {
           print('Current likes: $currentLikes');
           allClubForumController.updatePostLike(postId, true, currentLikes + 1);
           if (mounted) {
-           // showSnackBarMessage(context, 'Like successfully completed');
+            // showSnackBarMessage(context, 'Like successfully completed');
           }
         } else {
           print('Post not found for ID: $postId');
@@ -173,7 +178,7 @@ class _ForumScreenState extends State<ForumScreen> {
           allClubForumController.updatePostDislike(
               postId, true, currentDislikes + 1);
           if (mounted) {
-           // showSnackBarMessage(context, 'Dislike successfully completed');
+            // showSnackBarMessage(context, 'Dislike successfully completed');
           }
         } else {
           print('Post not found for ID: $postId');
@@ -225,8 +230,7 @@ class _ForumScreenState extends State<ForumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Obx(() {
+    return Obx(() {
         print(
             'Obx rebuild triggered with postList length: ${allClubForumController.postList.length}');
         if (allClubForumController.inProgress &&
@@ -255,7 +259,7 @@ class _ForumScreenState extends State<ForumScreen> {
                   ? ForumCard(
                       imagePath:
                           forumPost.author?.photoUrl ?? AppImages.carImage,
-                      clubName: forumPost.title ?? '',
+                      clubName: widget.clubName,
                       author: forumPost.author?.name ?? 'Unknown',
                       date: dateFormatter.getRelativeTimeFormat(),
                       title: forumPost.title ?? '',
@@ -313,9 +317,8 @@ class _ForumScreenState extends State<ForumScreen> {
                     )
                   : Container();
             },
-          );
+            );
         }
-      }),
-    );
+      });
   }
 }

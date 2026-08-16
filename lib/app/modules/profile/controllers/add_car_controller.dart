@@ -36,7 +36,25 @@ class AddCarController extends GetxController {
       int? doors,
       String? postcode,
       String? sellerType,
-      File? cover}) async {
+      File? cover,
+      int? monthlyPayment,
+      int? seats,
+      double? engineSize,
+      int? powerBhp,
+      String? zeroToSixtyBand,
+      String? drivetrain,
+      int? co2Emissions,
+      int? previousOwners,
+      String? serviceHistory,
+      int? numberOfKeys,
+      String? writeOffCategory,
+      String? roadTaxBand,
+      bool? ulezCompliant,
+      int? mpg,
+      List<String>? features,
+      List<String>? buildStatus,
+      String? clubId,
+      bool? eventReady}) async {
     if (_inProgress.value) {
       // Prevent multiple calls while in progress
       return false;
@@ -89,6 +107,60 @@ class AddCarController extends GetxController {
       }
       if (sellerType != null && sellerType.trim().isNotEmpty) {
         jsonFields["sellerType"] = sellerType.trim();
+      }
+      if (monthlyPayment != null && monthlyPayment > 0) {
+        jsonFields["monthlyPayment"] = monthlyPayment;
+      }
+      if (seats != null && seats > 0) {
+        jsonFields["seats"] = seats;
+      }
+      if (engineSize != null && engineSize > 0) {
+        jsonFields["engineSize"] = engineSize;
+      }
+      if (powerBhp != null && powerBhp > 0) {
+        jsonFields["powerBhp"] = powerBhp;
+      }
+      if (zeroToSixtyBand != null && zeroToSixtyBand.trim().isNotEmpty) {
+        jsonFields["zeroToSixtyBand"] = zeroToSixtyBand.trim();
+      }
+      if (drivetrain != null && drivetrain.trim().isNotEmpty) {
+        jsonFields["drivetrain"] = drivetrain.trim();
+      }
+      if (co2Emissions != null && co2Emissions > 0) {
+        jsonFields["co2Emissions"] = co2Emissions;
+      }
+      if (previousOwners != null && previousOwners > 0) {
+        jsonFields["previousOwners"] = previousOwners;
+      }
+      if (serviceHistory != null && serviceHistory.trim().isNotEmpty) {
+        jsonFields["serviceHistory"] = serviceHistory.trim();
+      }
+      if (numberOfKeys != null && numberOfKeys > 0) {
+        jsonFields["numberOfKeys"] = numberOfKeys;
+      }
+      if (writeOffCategory != null && writeOffCategory.trim().isNotEmpty) {
+        jsonFields["writeOffCategory"] = writeOffCategory.trim();
+      }
+      if (roadTaxBand != null && roadTaxBand.trim().isNotEmpty) {
+        jsonFields["roadTaxBand"] = roadTaxBand.trim();
+      }
+      if (ulezCompliant != null) {
+        jsonFields["ulezCompliant"] = ulezCompliant;
+      }
+      if (mpg != null && mpg > 0) {
+        jsonFields["mpg"] = mpg;
+      }
+      if (features != null && features.isNotEmpty) {
+        jsonFields["features"] = features;
+      }
+      if (buildStatus != null && buildStatus.isNotEmpty) {
+        jsonFields["buildStatus"] = buildStatus;
+      }
+      if (clubId != null && clubId.trim().isNotEmpty) {
+        jsonFields["clubId"] = clubId.trim();
+      }
+      if (eventReady != null) {
+        jsonFields["eventReady"] = eventReady;
       }
 
       request.fields['data'] = jsonEncode(jsonFields);

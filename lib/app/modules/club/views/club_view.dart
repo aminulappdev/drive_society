@@ -13,7 +13,7 @@ import 'package:dirve_society/app/modules/profile/views/my_clubs_view.dart';
 import 'package:dirve_society/app/modules/subscription/views/subscription_screen.dart';
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
-import 'package:dirve_society/common/size_box/custom_sizebox.dart'; 
+import 'package:dirve_society/common/size_box/custom_sizebox.dart';
 import 'package:dirve_society/common/widgets/club_header_layout.dart';
 import 'package:dirve_society/common/widgets/custom_dialoge.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
@@ -21,16 +21,18 @@ import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_text_style/styles.dart';
- 
+
 class ClubView extends StatefulWidget {
   final bool isAuthor;
   final String authorId;
+  final String name;
   final String id;
   const ClubView(
       {super.key,
       required this.id,
       required this.authorId,
-      required this.isAuthor});
+      required this.isAuthor,
+      required this.name});
 
   @override
   State<ClubView> createState() => _ClubViewState();
@@ -368,6 +370,7 @@ class _ClubViewState extends State<ClubView> {
                             authorId: widget.authorId,
                           )
                         : ForumScreen(
+                            clubName: widget.name,
                             clubId: widget.id,
                             authorId: widget.authorId,
                           ),
@@ -385,14 +388,14 @@ class _ClubViewState extends State<ClubView> {
                 onPressed: () {
                   selectedIndex == 0
                       ? Get.to(CreatePostView(
-                          authorId: widget.authorId, 
+                          authorId: widget.authorId,
                           clubId: widget.id,
                         ))
                       : Get.to(CreateForumView(
                           authorId: widget.authorId,
                           clubId: widget.id,
                         ));
-                }, 
+                },
                 backgroundColor: AppColors.darkRed,
                 child: Icon(
                   Icons.add,

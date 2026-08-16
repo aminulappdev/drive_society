@@ -31,9 +31,10 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   final ContentController _contentController = Get.put(ContentController());
-  final ProfileController _profileController = Get.isRegistered<ProfileController>()
-      ? Get.find<ProfileController>()
-      : Get.put(ProfileController());
+  final ProfileController _profileController =
+      Get.isRegistered<ProfileController>()
+          ? Get.find<ProfileController>()
+          : Get.put(ProfileController());
 
   @override
   void initState() {
@@ -53,13 +54,17 @@ class _ProfileViewState extends State<ProfileView> {
           Obx(() {
             final profile = _profileController.profileData.value;
             return ProfileHeaderLayout(
-              title: profile?.name ?? StorageUtil.getData(StorageUtil.profileName) ?? '',
-              coverImageUrl:
-                  profile?.coverPhoto ?? StorageUtil.getData(StorageUtil.profileCoverPhoto),
-              profileImageUrl:
-                  profile?.photoUrl ?? StorageUtil.getData(StorageUtil.profilePhotoUrl),
+              title: profile?.name ??
+                  StorageUtil.getData(StorageUtil.profileName) ??
+                  '',
+              coverImageUrl: profile?.coverPhoto ??
+                  StorageUtil.getData(StorageUtil.profileCoverPhoto),
+              profileImageUrl: profile?.photoUrl ??
+                  StorageUtil.getData(StorageUtil.profilePhotoUrl),
               onBack: Get.back,
-              subtitle: profile?.bio ?? StorageUtil.getData(StorageUtil.profileBio) ?? '',
+              subtitle: profile?.bio ??
+                  StorageUtil.getData(StorageUtil.profileBio) ??
+                  '',
               ratingText:
                   '${profile?.avgRating ?? StorageUtil.getData(StorageUtil.profileAvgRating) ?? '0.0'}',
               pointsText:
@@ -106,7 +111,7 @@ class _ProfileViewState extends State<ProfileView> {
                         onTap: () {
                           Get.to(() => MyClubsView());
                         },
-                        leadingImage: AppImages.garage,
+                        leadingImage: AppImages.club,
                         title: 'My Clubs',
                         trailingImage: AppImages.arrowRightSmall,
                       ),
@@ -115,8 +120,10 @@ class _ProfileViewState extends State<ProfileView> {
                         onTap: () {
                           Get.to(() => MyFriendScreen());
                         },
-                        leadingImage: AppImages.garage,
+                        leadingImage: AppImages.groupLight,
+                        isIconData: true,
                         title: 'My Friends',
+                        iconSize: 20,
                         trailingImage: AppImages.arrowRightSmall,
                       ),
                       sh12,

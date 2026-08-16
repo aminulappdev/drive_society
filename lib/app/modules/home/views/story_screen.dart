@@ -40,6 +40,8 @@ class _StoryScreenState extends State<StoryScreen>
   int _currentPage = 0;
   Timer? _timer;
 
+  static const int _storyDescriptionMaxLines = 4;
+
   @override
   void initState() {
     super.initState();
@@ -104,10 +106,10 @@ class _StoryScreenState extends State<StoryScreen>
             child: CircularProgressIndicator(color: Colors.white),
           );
         }
-    
+
         final user = ctrl.specificStoryModel?.data?.user;
         final stories = user?.stories;
-    
+
         if (user == null || stories == null || stories.isEmpty) {
           return Center(
             child: Column(
@@ -121,14 +123,13 @@ class _StoryScreenState extends State<StoryScreen>
                 ),
                 TextButton(
                   onPressed: () => Get.back(),
-                  child:
-                      Text('Go Back', style: TextStyle(color: Colors.white)),
+                  child: Text('Go Back', style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
           );
         }
-    
+
         return Stack(
           children: [
             // Full PageView
@@ -141,7 +142,7 @@ class _StoryScreenState extends State<StoryScreen>
               itemCount: stories.length,
               itemBuilder: (context, index) {
                 final story = stories[index];
-    
+
                 return GestureDetector(
                   onTapDown: (details) {
                     final width = MediaQuery.of(context).size.width;
@@ -178,10 +179,10 @@ class _StoryScreenState extends State<StoryScreen>
                             );
                           },
                         ),
-    
+
                         // Top Bar
                         Positioned(
-                          top: 0,
+                          top: MediaQuery.of(context).padding.top,
                           left: 0,
                           right: 0,
                           child: Container(
@@ -225,71 +226,93 @@ class _StoryScreenState extends State<StoryScreen>
                             ),
                           ),
                         ),
-    
+
                         // User Info
                         Positioned(
-                          top: 20,
+                          top: MediaQuery.of(context).padding.top + 20,
                           left: 16,
-                          right: 50,
+                          right: 16,
                           child: Container(
-                            color: Colors.grey.withValues(alpha: 0.30),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: NetworkImage(controller
-                                            .specificStoryModel!
-                                            .data!
-                                            .user
-                                            ?.photoUrl ??
-                                        ''),
-                                    backgroundColor: Colors.grey,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              user.name ?? 'User',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Text(
-                                              timeAgo(story.createdAt),
-                                              style: const TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          story.text!.trim(),
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.28),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: NetworkImage(controller
+                                          .specificStoryModel!
+                                          .data!
+                                          .user
+                                          ?.photoUrl ??
+                                      ''),
+                                  backgroundColor: Colors.grey,
+                                ),
+                                const SizedBox(width: 12),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      user.name ?? 'User',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      timeAgo(story.createdAt),
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
+
+                        if ((story.text ?? '').trim().isNotEmpty)
+                          Positioned(
+                            left: 16,
+                            right: 16,
+                            bottom: 32,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.black.withValues(alpha: 0.12),
+                                    Colors.black.withValues(alpha: 0.68),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Text(
+                                story.text!.trim(),
+                                maxLines: _storyDescriptionMaxLines,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  height: 1.45,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
