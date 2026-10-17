@@ -54,6 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
           Obx(() {
             final profile = _profileController.profileData.value;
             return ProfileHeaderLayout(
+              isBack: false,
               title: profile?.name ??
                   StorageUtil.getData(StorageUtil.profileName) ??
                   '',

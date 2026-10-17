@@ -16,6 +16,7 @@ class ProfileHeaderLayout extends StatelessWidget {
     this.onBack,
     this.pointsText,
     this.ratingText,
+    this.isBack = true,
   });
 
   final String title;
@@ -26,6 +27,7 @@ class ProfileHeaderLayout extends StatelessWidget {
   final VoidCallback? onBack;
   final String? pointsText;
   final String? ratingText;
+  final bool isBack;
 
   ImageProvider _imageProvider(String? url, String fallbackAsset) {
     if (url == null || url.trim().isEmpty) {
@@ -85,14 +87,16 @@ class ProfileHeaderLayout extends StatelessWidget {
           Positioned(
             top: MediaQuery.paddingOf(context).top + 12,
             left: 20,
-            child: GestureDetector(
-              onTap: onBack ?? () => Navigator.maybePop(context),
-              child: SizedBox(
-                width: 36,
-                height: 36,
-                child: Image.asset(AppImages.back),
-              ),
-            ),
+            child: isBack == true
+                ? GestureDetector(
+                    onTap: onBack ?? () => Navigator.maybePop(context),
+                    child: SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: Image.asset(AppImages.back),
+                    ),
+                  )
+                : const SizedBox(),
           ),
           Positioned(
             left: size.width * 0.04,
