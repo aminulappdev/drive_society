@@ -4,6 +4,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
+import '../../../../common/widgets/custom_circular_container.dart';
 
 class PrivacyAndSecurityView extends GetView {
   final String data;
@@ -20,14 +21,12 @@ class PrivacyAndSecurityView extends GetView {
           style: appBarStyle,
         ),
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Image.asset(
-            AppImages.back,
-            scale: 4,
-            color: AppColors.black,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: CustomCircularContainer(
+            imagePath: AppImages.back,
+            onTap: Get.back,
+            padding: 4,
           ),
         ),
       ),

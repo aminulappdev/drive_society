@@ -2,6 +2,7 @@ import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/common/app_text_style/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'image_preview_dialog.dart';
 
@@ -54,13 +55,50 @@ class ProfileHeaderLayout extends StatelessWidget {
     );
   }
 
+  void _handleBack(BuildContext context) {
+    final navigator = Navigator.maybeOf(context);
+
+    // Pop the navigator that owns this screen first. This avoids GetX trying
+    // to close a snackbar overlay before navigating back.
+    if (navigator != null && navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+
+    // Fallback for a GetX-managed navigator, without closing overlays.
+    if (Get.key.currentState?.canPop() ?? false) {
+      Get.back(closeOverlays: false);
+      return;
+    }
+
+    // Keep support for callers that provide their own back action.
+    if (onBack != null) {
+      onBack!();
+      return;
+    }
+
+    // If this page was mounted without a parent route, provide a safe fallback.
+    Get.offNamed('/dashboard');
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final coverHeight = size.height * 0.26;
-    final avatarSize = size.width * 0.30;
-    final bottomSpace = avatarSize * 0.78;
-    final pointsBottomOffset = avatarSize * 0.17;
+    // Keep the header proportional to the device width instead of using a
+    // percentage of the screen height. This prevents a very tall header on
+    // large phones and keeps it usable on smaller screens.
+    final coverHeight = (size.width * 0.50).clamp(185.0, 370.0).toDouble();
+    final avatarSize = (size.width * 0.29).clamp(96.0, 220.0).toDouble();
+    final horizontalPadding = (size.width * 0.04).clamp(14.0, 28.0).toDouble();
+    final bottomSpace = avatarSize * 0.72;
+    final pointsBottomOffset = avatarSize * 0.12;
+    final backButtonSize = (size.width * 0.10).clamp(32.0, 44.0).toDouble();
+    final backTapTargetSize =
+        (backButtonSize + size.width * 0.035).clamp(48.0, 64.0).toDouble();
+    final backButtonTop =
+        (MediaQuery.paddingOf(context).top * 0.65).clamp(8.0, 30.0).toDouble();
+    final titleFontSize = (size.width * 0.026).clamp(17.0, 20.0).toDouble();
+    final ratingFontSize = (size.width * 0.023).clamp(16.0, 18.0).toDouble();
 
     return SizedBox(
       height: coverHeight + bottomSpace,
@@ -85,23 +123,30 @@ class ProfileHeaderLayout extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: MediaQuery.paddingOf(context).top + 12,
-            left: 20,
+            top: backButtonTop,
+            left: horizontalPadding,
             child: isBack == true
                 ? GestureDetector(
-                    onTap: onBack ?? () => Navigator.maybePop(context),
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => _handleBack(context),
                     child: SizedBox(
-                      width: 36,
-                      height: 36,
-                      child: Image.asset(AppImages.back),
+                      width: backTapTargetSize,
+                      height: backTapTargetSize,
+                      child: Center(
+                        child: SizedBox(
+                          width: backButtonSize,
+                          height: backButtonSize,
+                          child: Image.asset(AppImages.back),
+                        ),
+                      ),
                     ),
                   )
                 : const SizedBox(),
           ),
           Positioned(
-            left: size.width * 0.04,
+            left: horizontalPadding,
             top: coverHeight - avatarSize / 2,
-            right: 20,
+            right: horizontalPadding,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -183,10 +228,10 @@ class ProfileHeaderLayout extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(width: 14),
+                SizedBox(width: (size.width * 0.035).clamp(10.0, 18.0)),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(top: avatarSize / 2.1),
+                    padding: EdgeInsets.only(top: avatarSize / 2.15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -200,24 +245,28 @@ class ProfileHeaderLayout extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: h1.copyWith(
-                                  fontSize: 20,
+                                  fontSize: titleFontSize,
                                   color: AppColors.black,
                                 ),
                               ),
                             ),
                             if (ratingText != null &&
                                 ratingText!.trim().isNotEmpty) ...[
-                              const SizedBox(width: 10),
+                              SizedBox(
+                                width: (size.width * 0.02).clamp(6.0, 10.0),
+                              ),
                               Icon(
                                 Icons.star,
                                 color: AppColors.darkRed,
-                                size: 20,
+                                size: (size.width * 0.026)
+                                    .clamp(18.0, 20.0)
+                                    .toDouble(),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 ratingText!,
                                 style: h3.copyWith(
-                                  fontSize: 18,
+                                  fontSize: ratingFontSize,
                                   color: AppColors.darkRed,
                                   fontWeight: FontWeight.w600,
                                 ),

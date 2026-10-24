@@ -4,28 +4,29 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
-
+import '../../../../common/widgets/custom_circular_container.dart';
 
 class TermsAndConditionsView extends GetView {
   final String data;
-  const TermsAndConditionsView({ required this.data, super.key});
-  @override 
+  const TermsAndConditionsView({required this.data, super.key});
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.mainColor,
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
-        title: Text('Terms of Services',style: appBarStyle,),
+        title: Text(
+          'Terms of Services',
+          style: appBarStyle,
+        ),
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Image.asset(
-            AppImages.back,
-            scale: 4,
-            color: AppColors.black,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: CustomCircularContainer(
+            imagePath: AppImages.back,
+            onTap: Get.back,
+            padding: 4,
           ),
         ),
       ),

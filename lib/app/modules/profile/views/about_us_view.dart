@@ -6,10 +6,11 @@ import 'package:get/get.dart';
 import '../../../../common/app_color/app_colors.dart';
 import '../../../../common/app_images/app_images.dart';
 import '../../../../common/app_text_style/styles.dart';
+import '../../../../common/widgets/custom_circular_container.dart';
 
 class AboutUsView extends GetView {
   final String data;
-  const AboutUsView({ required this.data, super.key});
+  const AboutUsView({required this.data, super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,21 +18,23 @@ class AboutUsView extends GetView {
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         scrolledUnderElevation: 0,
-        title: Text('About Us',style: appBarStyle,),
+        title: Text(
+          'About Us',
+          style: appBarStyle,
+        ),
         centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            Get.back();
-          },
-          child: Image.asset(
-            AppImages.back,
-            scale: 4,
-            color: AppColors.black,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: CustomCircularContainer(
+            imagePath: AppImages.back,
+            onTap: Get.back,
+            padding: 4,
           ),
-        ),      ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
