@@ -3,6 +3,7 @@ import 'package:dirve_society/app/modules/home/controllers/connection_view/disco
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/helper/group_card.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/custom_circular_container.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -45,14 +46,30 @@ class _AllPopulerScreenState extends State<AllPopulerScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
-              Text(
-                'Discover Popular Groups',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkRed,
-                ),
+              SizedBox(height: MediaQuery.paddingOf(context).top + 4),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CustomCircularContainer(
+                      imagePath: AppImages.back,
+                      onTap: () => Get.back(),
+                      padding: 4,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Discover Popular Groups',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.darkRed,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 5),
               Container(
@@ -143,11 +160,12 @@ class _AllPopulerScreenState extends State<AllPopulerScreen> {
                       ),
                       itemCount: filteredItems.length,
                       itemBuilder: (context, index) {
-                        return Padding( 
+                        return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Center(
                             child: SizedBox(
-                              width: 200, // Ensure GroupCard respects this width
+                              width:
+                                  200, // Ensure GroupCard respects this width
                               child: GroupCard(
                                 isOneButton: true,
                                 acceptButton: () {},
@@ -161,11 +179,12 @@ class _AllPopulerScreenState extends State<AllPopulerScreen> {
                                 },
                                 rejectedButton: () {},
                                 imageUrl: filteredItems[index]
-                                        .coverPhoto
-                                        ?.isNotEmpty ==
-                                    true
+                                            .coverPhoto
+                                            ?.isNotEmpty ==
+                                        true
                                     ? filteredItems[index].coverPhoto!
-                                    : AppImages.noImage, // Fallback to placeholder
+                                    : AppImages
+                                        .noImage, // Fallback to placeholder
                                 title: filteredItems[index].name ?? '',
                                 memberCount:
                                     '${filteredItems[index].member ?? 0} Members',

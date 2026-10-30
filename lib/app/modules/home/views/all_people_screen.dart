@@ -4,6 +4,7 @@ import 'package:dirve_society/app/modules/profile/others/views/others_profile_sc
 import 'package:dirve_society/common/app_color/app_colors.dart';
 import 'package:dirve_society/common/helper/user_card.dart';
 import 'package:dirve_society/common/widgets/custom_snackbar_widget.dart';
+import 'package:dirve_society/common/widgets/custom_circular_container.dart';
 import 'package:dirve_society/common/app_images/app_images.dart';
 import 'package:dirve_society/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -46,14 +47,30 @@ class _AllPeopleScreenState extends State<AllPeopleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
-              Text(
-                'All People',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkRed,
-                ),
+              SizedBox(height: MediaQuery.paddingOf(context).top + 4),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CustomCircularContainer(
+                      imagePath: AppImages.back,
+                      onTap: () => Get.back(),
+                      padding: 4,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'All People',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.darkRed,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 5),
               Container(
